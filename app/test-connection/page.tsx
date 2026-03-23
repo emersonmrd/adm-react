@@ -22,7 +22,9 @@ export default function TestConnection() {
         // Tenta fazer uma requisição GET apra o endpoint "/test-connection"
         const response = await instance.get("/test-connection");
         // Se a requisição for bem-sucedida, atualiza a mensagem com a resposta da API
-        setMessage(response.data.message || "Conexão realizada com sucesso2!");
+        setMessage(
+          response.data.message || "Conexão com a API realizada com sucesso!",
+        );
       } catch (error: any) {
         // Caso ocorra um erro na requisição, exibe o erro no console e define uma mensagem de erro
         console.error("Erro ao testar a conexão: ", error);
