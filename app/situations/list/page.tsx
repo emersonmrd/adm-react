@@ -8,6 +8,11 @@ import instance from "@/services/api";
 // Importa hooks do React para usar o estado e os efetios colaterais
 import { useEffect, useState } from "react";
 
+// Importa o componente com o Menu
+import Menu from "@/app/components/Menu";
+// Importa o componente com a paginação
+import Pagination from "@/app/components/Pagination";
+
 // Definir tipos para a respota da API
 interface Situation {
   id: number;
@@ -35,7 +40,7 @@ export default function SituationList() {
       // setLoading(true);
 
       // Fazer a requisição à API
-      const response = await instance.get(`/situations?page=${page}&limit=10`);
+      const response = await instance.get(`/situations?page=${page}&limit=1`);
 
       // Atualizar o estado com os dados da API
       setSituations(response.data.data);
@@ -44,7 +49,7 @@ export default function SituationList() {
       setCurrentPage(response.data.currentPage);
 
       // Atualiza a última página
-      setCurrentPage(response.data.lastPage);
+      setLastPage(response.data.lastPage);
 
       // Termina o carregamento
       setLoading(false);
@@ -63,7 +68,11 @@ export default function SituationList() {
 
   return (
     <div>
+      <Menu />
+      <br />
+
       <h1>Listar as situações</h1>
+      <br />
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
       {/* Exibe erro, se houver */}
@@ -88,6 +97,16 @@ export default function SituationList() {
           </tbody>
         </table>
       )}
+
+      {/* Usar o componente de Paginação */}
+      <br />
+      <div>
+        <Pagination
+          currentPage={currentPage}
+          lastPage={lastPage}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }
