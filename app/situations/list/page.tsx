@@ -2,16 +2,20 @@
 // Essa diretiva é específica para Next.js 13+ quando se utiliza a renderização no lado do cliente.
 "use client";
 
-// Importa a instância do axios configurada para fazer as requisições para a API
-import instance from "@/services/api";
-
 // Importa hooks do React para usar o estado e os efetios colaterais
 import { useEffect, useState } from "react";
 
+// Importa a instância do axios configurada para fazer as requisições para a API
+import instance from "@/services/api";
+
 // Importa o componente com o Menu
 import Menu from "@/app/components/Menu";
+
 // Importa o componente com a paginação
 import Pagination from "@/app/components/Pagination";
+
+// Importa o componente link do next
+import Link from "next/link";
 
 // Definir tipos para a respota da API
 interface Situation {
@@ -37,7 +41,7 @@ export default function SituationList() {
   const fetchSituations = async (page: number) => {
     try {
       // Inicia o carregamento
-      // setLoading(true);
+      setLoading(true);
 
       // Fazer a requisição à API
       const response = await instance.get(`/situations?page=${page}&limit=1`);
@@ -54,6 +58,7 @@ export default function SituationList() {
       // Termina o carregamento
       setLoading(false);
     } catch (error) {
+      // Criar a mensagem genérica de erro
       setError("Erro ao carregar as situações");
       //Termina o carregamento em caso de erro
       setLoading(false);
@@ -71,7 +76,7 @@ export default function SituationList() {
       <Menu />
       <br />
 
-      <h1>Listar as situações</h1>
+      <h1>Listar as Situações</h1>
       <br />
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
@@ -91,7 +96,10 @@ export default function SituationList() {
               <tr key={situaton.id}>
                 <td>{situaton.id}</td>
                 <td>{situaton.nameSituation}</td>
-                <td>Visualizar - Editar - Apagar</td>
+                <td>
+                  <Link href={`/situations/${situaton.id}`}>Visualizar</Link>
+                  {` `}- Editar - Apagar
+                </td>
               </tr>
             ))}
           </tbody>

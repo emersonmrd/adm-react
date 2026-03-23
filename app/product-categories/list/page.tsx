@@ -2,16 +2,20 @@
 // Essa diretiva é específica para Next.js 13+ quando se utiliza a renderização no lado do cliente.
 "use client";
 
-// Importa a instância do axios configurada para fazer as requisições para a API
-import instance from "@/services/api";
-
 // Importa hooks do React para usar o estado e os efetios colaterais
 import { useEffect, useState } from "react";
 
+// Importa a instância do axios configurada para fazer as requisições para a API
+import instance from "@/services/api";
+
 // Importa o componente com o Menu
 import Menu from "@/app/components/Menu";
+
 // Importa o componente com a paginação
 import Pagination from "@/app/components/Pagination";
+
+// Importa o componente link do next
+import Link from "next/link";
 
 // Definir tipos para a respota da API
 interface ProductCategory {
@@ -39,7 +43,7 @@ export default function ProductCategoryList() {
   const fetchProductCategories = async (page: number) => {
     try {
       // Inicia o carregamento
-      // setLoading(true);
+      setLoading(true);
 
       // Fazer a requisição à API
       const response = await instance.get(
@@ -58,6 +62,7 @@ export default function ProductCategoryList() {
       // Termina o carregamento
       setLoading(false);
     } catch (error) {
+      // Criar a mensagem genérica de erro
       setError("Erro ao carregar as situações");
       //Termina o carregamento em caso de erro
       setLoading(false);
@@ -94,7 +99,12 @@ export default function ProductCategoryList() {
               <tr key={productCategory.id}>
                 <td>{productCategory.id}</td>
                 <td>{productCategory.name}</td>
-                <td>Visualizar - Editar - Apagar</td>
+                <td>
+                  <Link href={`/product-categories/${productCategory.id}`}>
+                    Visualizar
+                  </Link>
+                  {` `}- Editar - Apagar
+                </td>
               </tr>
             ))}
           </tbody>
