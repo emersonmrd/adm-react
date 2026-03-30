@@ -79,12 +79,13 @@ export default function ProductCategoryList() {
     <div>
       <Menu />
       <br />
+      <Link href={`/product-categories/create`}>Cadastrar</Link>
       <h1>Listar as Categorias dos Produtos</h1>
       <br />
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
-      {/* Exibe erro, se houver */}
-      {error && <p>{error}</p>}
+      {/* Exibe mensagem de erro*/}
+      {error && <p style={{ color: "#F00" }}>{error}</p>}
       {!loading && !error && (
         <table>
           <thead>

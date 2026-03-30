@@ -85,8 +85,8 @@ export default function SituationDetails() {
 
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
-      {/* Exibe erro, se houver */}
-      {error && <p>{error}</p>}
+      {/* Exibe mensagem de erro*/}
+      {error && <p style={{ color: "#F00" }}>{error}</p>}
       {/* Imprimir os detalhes do registro */}
       {situation && !loading && !error && (
         <div>

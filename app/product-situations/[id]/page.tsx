@@ -86,8 +86,8 @@ export default function ProductSituationDetails() {
 
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
-      {/* Exibe erro, se houver */}
-      {error && <p>{error}</p>}
+      {/* Exibe mensagem de erro*/}
+      {error && <p style={{ color: "#F00" }}>{error}</p>}
       {/* Imprimir os detalhes do registro */}
       {productSituation && !loading && !error && (
         <div>
