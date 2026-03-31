@@ -104,7 +104,11 @@ export default function ProductCategoryList() {
                   <Link href={`/product-categories/${productCategory.id}`}>
                     Visualizar
                   </Link>
-                  {` `}- Editar - Apagar
+                  {` - `}
+                  <Link href={`/product-categories/${productCategory.id}/edit`}>
+                    Editar
+                  </Link>
+                  {` `}- Apagar
                 </td>
               </tr>
             ))}

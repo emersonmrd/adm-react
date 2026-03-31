@@ -104,7 +104,13 @@ export default function ProductSituationList() {
                   <Link href={`/product-situations/${productSituation.id}`}>
                     Visualizar
                   </Link>
-                  {` `}- Editar - Apagar
+                  {` - `}
+                  <Link
+                    href={`/product-situations/${productSituation.id}/edit`}
+                  >
+                    Editar
+                  </Link>
+                  {` `} - Apagar
                 </td>
               </tr>
             ))}

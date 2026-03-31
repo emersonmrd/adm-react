@@ -101,6 +101,7 @@ export default function CreateProductCategory() {
             value={name}
             placeholder="Nome da Categoria do Produto"
             onChange={(e) => setName(e.target.value)}
+            className="border"
           />
         </div>
         <button type="submit" disabled={loading}>

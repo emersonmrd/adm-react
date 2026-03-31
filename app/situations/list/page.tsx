@@ -99,7 +99,9 @@ export default function SituationList() {
                 <td>{situaton.nameSituation}</td>
                 <td>
                   <Link href={`/situations/${situaton.id}`}>Visualizar</Link>
-                  {` `}- Editar - Apagar
+                  {` - `}
+                  <Link href={`/situations/${situaton.id}/edit`}>Editar</Link>
+                  {` `}- Apagar
                 </td>
               </tr>
             ))}
