@@ -129,6 +129,7 @@ export default function EditProductSituation() {
       <br />
       <Link href={`/product-situations/list`}>Listar</Link>
       <br />
+      <Link href={`/product-situations/${id}`}>Visualizar</Link>
       <h1>Editar Situação do Produto</h1>
       <br />
       {/* Exibir o carregando */}

@@ -5,6 +5,9 @@
 // Importa hooks do React para usar o estado e os efetios colaterais
 import { useEffect, useState } from "react";
 
+// Importa hooks usado para manipular a navegação do usuário
+import { useRouter } from "next/navigation";
+
 // useParams - Acessar os parâmetros da URL de uma página que usa rotas dinâmicas
 import { useParams } from "next/navigation";
 
@@ -16,6 +19,9 @@ import Menu from "@/app/components/Menu";
 
 // Importa o componente link do next
 import Link from "next/link";
+
+// Importa o componente para apagar registro
+import DeleteButton from "@/app/components/DeleteButton";
 
 // Definir tipos para a respota da API
 interface Situation {
@@ -29,6 +35,9 @@ export default function SituationDetails() {
   // Usado o useParams para acessar o parâmetro 'id' da URL
   const { id } = useParams();
 
+  // Insatancia o objeto router
+  const router = useRouter();
+
   // Estado para armazenar a situação
   const [situation, setSituation] = useState<Situation | null>(null);
 
@@ -37,6 +46,9 @@ export default function SituationDetails() {
 
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
+
+  // Estado para controle de sucesso
+  const [sucess, setSucess] = useState<string | null>(null);
 
   // Função para buscar as situação da API
   const fetchSituationDetails = async (id: string) => {
@@ -64,6 +76,16 @@ export default function SituationDetails() {
       setLoading(false);
     }
   };
+
+  // Redirecionar para a página listar após apagar o registro
+  const handleSucess = () => {
+    //Salvar a mensagem no sessionStorage antes de redirecionar
+    sessionStorage.setItem("sucessMessage", "Registro apagado com sucesso.");
+
+    // Redireciona para a página de listar
+    router.push("/situations/list");
+  };
+
   // Hook para buscar os dados quando o id estiver disponível
   useEffect(() => {
     if (id) {
@@ -80,6 +102,19 @@ export default function SituationDetails() {
       <br />
 
       <Link href={`/situations/list`}>Listar</Link>
+      <br />
+
+      <Link href={`/situations/${id}/edit`}>Editar</Link>
+
+      {situation && !loading && !error && (
+        <DeleteButton
+          id={String(situation.id)}
+          route="situations"
+          onSucess={handleSucess}
+          setError={setError}
+          setSucess={setSucess}
+        />
+      )}
 
       <h1>Detalhes da situação</h1>
 
@@ -87,6 +122,8 @@ export default function SituationDetails() {
       {loading && <p>Carregando...</p>}
       {/* Exibe mensagem de erro*/}
       {error && <p style={{ color: "#F00" }}>{error}</p>}
+      {/* Exibe mensagem de sucesso */}
+      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
       {/* Imprimir os detalhes do registro */}
       {situation && !loading && !error && (
         <div>

@@ -127,6 +127,8 @@ export default function EditSituation() {
       <br />
       <Link href={`/situations/list`}>Listar</Link>
       <br />
+      <Link href={`/situations/${id}`}>Visualizar</Link>
+
       <h1>Editar Situação</h1>
       <br />
       {/* Exibir o carregando */}

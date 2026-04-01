@@ -5,6 +5,9 @@
 // Importa hooks do React para usar o estado e os efetios colaterais
 import { useEffect, useState } from "react";
 
+// Importa hooks usado para manipular a navegação do usuário
+import { useRouter } from "next/navigation";
+
 // useParams - Acessar os parâmetros da URL de uma página que usa rotas dinâmicas
 import { useParams } from "next/navigation";
 
@@ -16,6 +19,9 @@ import Menu from "@/app/components/Menu";
 
 // Importa o componente link do next
 import Link from "next/link";
+
+// Importa o componente para apagar registro
+import DeleteButton from "@/app/components/DeleteButton";
 
 // Definir tipos para a respota da API
 interface ProductCategory {
@@ -29,6 +35,9 @@ export default function ProductCategoryDetails() {
   // Usado o useParams para acessar o parâmetro 'id' da URL
   const { id } = useParams();
 
+  // Insatancia o objeto router
+  const router = useRouter();
+
   // Estado para armazenar a categoria do produto
   const [productCategory, setProductCategory] =
     useState<ProductCategory | null>(null);
@@ -38,6 +47,9 @@ export default function ProductCategoryDetails() {
 
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
+
+  // Estado para controle de sucesso
+  const [sucess, setSucess] = useState<string | null>(null);
 
   // Função para buscar a situação da API
   const fetchProductCategoryDetails = async (id: string) => {
@@ -65,6 +77,16 @@ export default function ProductCategoryDetails() {
       setLoading(false);
     }
   };
+
+  // Redirecionar para a página listar após apagar o registro
+  const handleSucess = () => {
+    //Salvar a mensagem no sessionStorage antes de redirecionar
+    sessionStorage.setItem("sucessMessage", "Registro apagado com sucesso.");
+
+    // Redireciona para a página de listar
+    router.push("/product-categories/list");
+  };
+
   // Hook para buscar os dados quando o id estiver disponível
   useEffect(() => {
     if (id) {
@@ -81,6 +103,19 @@ export default function ProductCategoryDetails() {
       <br />
 
       <Link href={`/product-categories/list`}>Listar</Link>
+      <br />
+
+      <Link href={`/product-categories/${id}/edit`}>Editar</Link>
+
+      {productCategory && !loading && !error && (
+        <DeleteButton
+          id={String(productCategory.id)}
+          route="product-categories"
+          onSucess={handleSucess}
+          setError={setError}
+          setSucess={setSucess}
+        />
+      )}
 
       <h1>Detalhes da Categoria do Produto</h1>
 
@@ -88,6 +123,8 @@ export default function ProductCategoryDetails() {
       {loading && <p>Carregando...</p>}
       {/* Exibe mensagem de erro*/}
       {error && <p style={{ color: "#F00" }}>{error}</p>}
+      {/* Exibe mensagem de sucesso */}
+      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
       {/* Imprimir os detalhes do registro */}
       {productCategory && !loading && !error && (
         <div>

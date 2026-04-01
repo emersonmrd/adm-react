@@ -129,6 +129,7 @@ export default function EditProductCategory() {
       <br />
       <Link href={`/product-categories/list`}>Listar</Link>
       <br />
+      <Link href={`/product-categories/${id}`}>Visualizar</Link>
       <h1>Editar Categoria do Produto</h1>
       <br />
       {/* Exibir o carregando */}

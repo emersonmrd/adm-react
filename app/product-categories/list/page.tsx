@@ -17,6 +17,9 @@ import Pagination from "@/app/components/Pagination";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importa o componente para apagar registro
+import DeleteButton from "@/app/components/DeleteButton";
+
 // Definir tipos para a respota da API
 interface ProductCategory {
   id: number;
@@ -34,6 +37,8 @@ export default function ProductCategoryList() {
   const [loading, setLoading] = useState<boolean>(true);
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
+  // Estado para controle de sucesso
+  const [sucess, setSucess] = useState<string | null>(null);
   // Página atual
   const [currentPage, setCurrentPage] = useState<number>(1);
   // última página
@@ -69,8 +74,24 @@ export default function ProductCategoryList() {
     }
   };
 
+  // Atualizar a lista de registro após apagar o registro
+  const handleSucess = () => {
+    fetchProductCategories(currentPage);
+  };
+
   // Hook para buscar os dados na primeira renderização
   useEffect(() => {
+    // Recuperar a mensagem salva no sessionStorage
+    const message = sessionStorage.getItem("sucessMessage");
+
+    // Verificar se existe a mensagem
+    if (message) {
+      // Atribuir a mensagem
+      setSucess(message);
+      // Remover para evitar duplicação
+      sessionStorage.removeItem("sucessMessage");
+    }
+
     // Busca os dados ao carregar a página
     fetchProductCategories(currentPage);
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
@@ -86,6 +107,8 @@ export default function ProductCategoryList() {
       {loading && <p>Carregando...</p>}
       {/* Exibe mensagem de erro*/}
       {error && <p style={{ color: "#F00" }}>{error}</p>}
+      {/* Exibe mensagem de sucesso */}
+      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
       {!loading && !error && (
         <table>
           <thead>
@@ -108,7 +131,14 @@ export default function ProductCategoryList() {
                   <Link href={`/product-categories/${productCategory.id}/edit`}>
                     Editar
                   </Link>
-                  {` `}- Apagar
+                  {` - `}
+                  <DeleteButton
+                    id={String(productCategory.id)}
+                    route="product-categories"
+                    onSucess={handleSucess}
+                    setError={setError}
+                    setSucess={setSucess}
+                  />
                 </td>
               </tr>
             ))}

@@ -17,6 +17,9 @@ import Pagination from "@/app/components/Pagination";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importa o componente para apagar registro
+import DeleteButton from "@/app/components/DeleteButton";
+
 // Definir tipos para a respota da API
 interface Situation {
   id: number;
@@ -32,6 +35,8 @@ export default function SituationList() {
   const [loading, setLoading] = useState<boolean>(true);
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
+  // Estado para controle de sucesso
+  const [sucess, setSucess] = useState<string | null>(null);
   // Página atual
   const [currentPage, setCurrentPage] = useState<number>(1);
   // última página
@@ -65,8 +70,24 @@ export default function SituationList() {
     }
   };
 
+  // Atualizar a lista de registro após apagar o registro
+  const handleSucess = () => {
+    fetchSituations(currentPage);
+  };
+
   // Hook para buscar os dados na primeira renderização
   useEffect(() => {
+    // Recuperar a mensagem salva no sessionStorage
+    const message = sessionStorage.getItem("sucessMessage");
+
+    // Verificar se existe a mensagem
+    if (message) {
+      // Atribuir a mensagem
+      setSucess(message);
+      // Remover para evitar duplicação
+      sessionStorage.removeItem("sucessMessage");
+    }
+
     // Busca os dados ao carregar a página
     fetchSituations(currentPage);
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
@@ -83,6 +104,8 @@ export default function SituationList() {
       {loading && <p>Carregando...</p>}
       {/* Exibe mensagem de erro*/}
       {error && <p style={{ color: "#F00" }}>{error}</p>}
+      {/* Exibe mensagem de sucesso */}
+      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
       {!loading && !error && (
         <table>
           <thead>
@@ -93,15 +116,22 @@ export default function SituationList() {
             </tr>
           </thead>
           <tbody>
-            {situations.map((situaton) => (
-              <tr key={situaton.id}>
-                <td>{situaton.id}</td>
-                <td>{situaton.nameSituation}</td>
+            {situations.map((situation) => (
+              <tr key={situation.id}>
+                <td>{situation.id}</td>
+                <td>{situation.nameSituation}</td>
                 <td>
-                  <Link href={`/situations/${situaton.id}`}>Visualizar</Link>
+                  <Link href={`/situations/${situation.id}`}>Visualizar</Link>
                   {` - `}
-                  <Link href={`/situations/${situaton.id}/edit`}>Editar</Link>
-                  {` `}- Apagar
+                  <Link href={`/situations/${situation.id}/edit`}>Editar</Link>
+                  {` - `}
+                  <DeleteButton
+                    id={String(situation.id)}
+                    route="situations"
+                    onSucess={handleSucess}
+                    setError={setError}
+                    setSucess={setSucess}
+                  />
                 </td>
               </tr>
             ))}
