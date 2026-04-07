@@ -8,6 +8,15 @@ import { useEffect, useState } from "react";
 // useParams - Acessar os parâmetros da URL de uma página que usa rotas dinâmicas
 import { useParams } from "next/navigation";
 
+// Importar o adaptador para conectar react-hook-form com bibliotecas de validação como Yup
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Importar a função para gerenciar o formulário
+import { useForm } from "react-hook-form";
+
+// Importar a dependência para validar o formulário.
+import * as yup from "yup";
+
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
@@ -17,14 +26,17 @@ import Menu from "@/app/components/Menu";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Esquema de validação com Yup
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .required("O nome da situação é obrigatório!")
+    .min(3, "O nome deve ter pelo menos 3 caracteres!"),
+});
+
 export default function EditProductSituation() {
   // Usado o useParams para acessar o parâmetro 'id' da URL
   const { id } = useParams();
-
-  console.log(id);
-
-  // Estado para o campo name
-  const [name, setName] = useState<string>("");
 
   // Estado para controle de carregamento
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +57,7 @@ export default function EditProductSituation() {
       const response = await instance.get(`/product-situations/${id}`);
 
       // Preenche o campo com os dados existentes
-      setName(response.data.name);
+      reset({ name: response.data.name });
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -69,11 +81,17 @@ export default function EditProductSituation() {
     }
   };
 
-  // Função para enviar os dados atualizados para a API
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Evita o recarregamento da página ao enviar o formulário
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
+  // Função para enviar os dados atualizados para a API
+  const onSubmit = async (data: { name: string }) => {
     // Inicia o carregamento
     setLoading(true);
 
@@ -85,9 +103,7 @@ export default function EditProductSituation() {
 
     try {
       // Fazer a requisição à API e enviar os dados
-      const response = await instance.put(`/product-situations/${id}`, {
-        name: name, // Envia o nome da situação do produto
-      });
+      const response = await instance.put(`/product-situations/${id}`, data);
 
       // Exibir mensagem de sucesso
       setSucess(
@@ -139,17 +155,20 @@ export default function EditProductSituation() {
       {/* Exibe mensagem de sucesso */}
       {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="name">Situação do Produto: </label>
           <input
             type="text"
             id="name"
-            value={name}
             placeholder="Nome da situação do Produto"
-            onChange={(e) => setName(e.target.value)}
+            {...register("name")}
             className="border"
           />
+          {/* Exibe o erro de validação do campo */}
+          {errors.name && (
+            <p style={{ color: "#f00" }}>{errors.name.message}</p>
+          )}
         </div>
         <button type="submit" disabled={loading}>
           {loading ? "Enviando..." : "Salvar"}{" "}

@@ -39,6 +39,12 @@ Pacote para conectar a aplicação à API.
 npm i axios
 ```
 
+Instalar a dependência Yup para validar o formulário. O react-hook-form para gerenciar o formulário. O resolvers para conectar react-hook-form com Yup.
+
+```
+npm install @hookform/resolvers yup react-hook-form
+```
+
 Rodar o projeto React.
 
 ```

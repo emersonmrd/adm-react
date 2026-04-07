@@ -5,6 +5,15 @@
 // Importa hooks do React para usar o estado
 import { useState } from "react";
 
+// Importar o adptador para conectar react-hook-form com bibliotecas de validação como Yup
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Importar a função para gerenciar o formulário
+import { useForm } from "react-hook-form";
+
+// Importar a dependência para validar o formulário.
+import * as yup from "yup";
+
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
@@ -14,10 +23,15 @@ import Menu from "@/app/components/Menu";
 // Importa o componente link do next
 import Link from "next/link";
 
-export default function CreateSituation() {
-  // Estado para o campo nameSituation
-  const [nameSituation, setNameSituation] = useState<string>("");
+// Esquema de validação com Yup
+const schema = yup.object().shape({
+  nameSituation: yup
+    .string()
+    .required("O nome da situação é obrigatório!")
+    .min(3, "O nome deve ter pelo menos 3 caracteres!"),
+});
 
+export default function CreateSituation() {
   // Estado para controle de carregamento
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -27,11 +41,17 @@ export default function CreateSituation() {
   // Estado para controle de sucesso
   const [sucess, setSucess] = useState<string | null>(null);
 
-  // Função para enviar os dados para a API
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // Evita o recarregamento da página ao enviar o formulário
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
+  // Função para enviar os dados para a API
+  const onSubmit = async (data: { nameSituation: string }) => {
     // Inicia o carregamento
     setLoading(true);
 
@@ -43,15 +63,13 @@ export default function CreateSituation() {
 
     try {
       // Fazer a requisição à API e enviar os dados
-      const response = await instance.post("/situations", {
-        nameSituation: nameSituation, // Envia o nome da situação
-      });
+      const response = await instance.post("/situations", data);
 
       // Exibir mensagem de sucesso
       setSucess(response.data.message || "Situação cadastrada com sucesso!");
 
       // Limpa o campo do formulário
-      setNameSituation("");
+      reset();
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -90,17 +108,20 @@ export default function CreateSituation() {
       {/* Exibe mensagem de sucesso */}
       {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="nameSituation">Nome da Situação</label>
           <input
             type="text"
             id="nameSituation"
-            value={nameSituation}
             placeholder="Nome da situação"
-            onChange={(e) => setNameSituation(e.target.value)}
+            {...register("nameSituation")}
             className="border"
           />
+          {/* Exibe o erro de validação do campo */}
+          {errors.nameSituation && (
+            <p style={{ color: "#F00" }}>{errors.nameSituation.message}</p>
+          )}
         </div>
         <button type="submit" disabled={loading}>
           {loading ? "Enviando..." : "Cadastrar"}{" "}
