@@ -1,12 +1,11 @@
-// Importa o componente com o Menu
-import Menu from "@/app/components/Menu";
+// Importa o componente link do next
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div>
-      <Menu />
-      <br />
       <h1>Bem-vindo Celke</h1>
+      <Link href="/login">Login</Link>
     </div>
   );
 }
