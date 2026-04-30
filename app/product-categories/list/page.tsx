@@ -20,6 +20,9 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Definir tipos para a respota da API
 interface ProductCategory {
   id: number;
@@ -68,7 +71,7 @@ export default function ProductCategoryList() {
       setLoading(false);
     } catch (error) {
       // Criar a mensagem genérica de erro
-      setError("Erro ao carregar as situações");
+      setError("Erro ao carregar as categorias do produto");
       //Termina o carregamento em caso de erro
       setLoading(false);
     }
@@ -97,7 +100,7 @@ export default function ProductCategoryList() {
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
 
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
       <Link href={`/product-categories/create`}>Cadastrar</Link>
@@ -154,6 +157,6 @@ export default function ProductCategoryList() {
           onPageChange={setCurrentPage}
         />
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

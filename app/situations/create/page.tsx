@@ -23,6 +23,9 @@ import Menu from "@/app/components/Menu";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Esquema de validação com Yup
 const schema = yup.object().shape({
   nameSituation: yup
@@ -94,7 +97,7 @@ export default function CreateSituation() {
   };
 
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
       <Link href={`/situations/list`}>Listar</Link>
@@ -127,6 +130,6 @@ export default function CreateSituation() {
           {loading ? "Enviando..." : "Cadastrar"}{" "}
         </button>
       </form>
-    </div>
+    </ProtectedRoute>
   );
 }

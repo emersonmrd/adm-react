@@ -20,6 +20,9 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Definir tipos para a respota da API
 interface ProductSituation {
   id: number;
@@ -97,7 +100,7 @@ export default function ProductSituationList() {
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
 
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
       <Link href={`/product-situations/create`}>Cadastrar</Link>
@@ -157,6 +160,6 @@ export default function ProductSituationList() {
           onPageChange={setCurrentPage}
         />
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

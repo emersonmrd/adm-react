@@ -20,6 +20,9 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Definir tipos para a respota da API
 interface Situation {
   id: number;
@@ -52,13 +55,13 @@ export default function SituationList() {
       const response = await instance.get(`/situations?page=${page}&limit=1`);
 
       // Atualizar o estado com os dados da API
-      setSituations(response.data.data);
+      setSituations(response.data.result.data);
 
       // Atualiza a página atual
-      setCurrentPage(response.data.currentPage);
+      setCurrentPage(response.data.result.currentPage);
 
       // Atualiza a última página
-      setLastPage(response.data.lastPage);
+      setLastPage(response.data.result.lastPage);
 
       // Termina o carregamento
       setLoading(false);
@@ -93,7 +96,7 @@ export default function SituationList() {
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
 
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
       <Link href={`/situations/create`}>Cadastrar</Link>
@@ -148,6 +151,6 @@ export default function SituationList() {
           onPageChange={setCurrentPage}
         />
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

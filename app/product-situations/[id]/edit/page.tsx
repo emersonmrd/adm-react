@@ -26,6 +26,9 @@ import Menu from "@/app/components/Menu";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Esquema de validação com Yup
 const schema = yup.object().shape({
   name: yup
@@ -140,7 +143,7 @@ export default function EditProductSituation() {
     }
   }, [id]); // Recarrega os dados quando o id mudar
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
       <Link href={`/product-situations/list`}>Listar</Link>
@@ -174,6 +177,6 @@ export default function EditProductSituation() {
           {loading ? "Enviando..." : "Salvar"}{" "}
         </button>
       </form>
-    </div>
+    </ProtectedRoute>
   );
 }

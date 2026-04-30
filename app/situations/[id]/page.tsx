@@ -23,6 +23,9 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
+// Importar componente de proteção de rotas
+import ProtectedRoute from "@/app/components/ProtectedRoute";
+
 // Definir tipos para a respota da API
 interface Situation {
   id: number;
@@ -97,7 +100,7 @@ export default function SituationDetails() {
   }, [id]); // Recarrega os dados quando o id mudar
 
   return (
-    <div>
+    <ProtectedRoute>
       <Menu />
       <br />
 
@@ -133,6 +136,6 @@ export default function SituationDetails() {
           <p>Editado:{new Date(situation.updatedAt).toLocaleString()}</p>
         </div>
       )}
-    </div>
+    </ProtectedRoute>
   );
 }

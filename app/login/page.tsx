@@ -74,6 +74,9 @@ export default function LoginPage() {
       //alert(response.data.message || "Login realizado com sucesso.");
       // console.log(response.data);
 
+      // Salvar o token no localStorage
+      localStorage.setItem("token", response.data.user.token);
+
       // Redireciona para o dashboard
       router.push("/dashboard");
     } catch (error: any) {

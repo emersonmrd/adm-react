@@ -10,5 +10,23 @@ const instance: AxiosInstance = axios.create({
   },
 });
 
+// Interceptador para adicionar o token automaticamente nas requisições
+instance.interceptors.request.use(
+  (config) => {
+    // Verifica se está no cliente antes de acessar o localStorage
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        //console.log(`Bearer ${token}`);
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 // Exportar a instância do Axios para ser utilizada em outras partes do projeto
 export default instance;
