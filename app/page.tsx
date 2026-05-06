@@ -5,7 +5,9 @@ export default function Home() {
   return (
     <div>
       <h1>Bem-vindo Celke</h1>
-      <Link href="/login">Login</Link>
+      <p>
+        <Link href="/new-users">Sign Up</Link> <Link href="/login">Login</Link>
+      </p>
     </div>
   );
 }

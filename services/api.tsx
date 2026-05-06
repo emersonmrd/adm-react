@@ -15,15 +15,21 @@ instance.interceptors.request.use(
   (config) => {
     // Verifica se está no cliente antes de acessar o localStorage
     if (typeof window !== "undefined") {
+      // Recuperar o token
       const token = localStorage.getItem("token");
+
+      // Verificar se existe o token
       if (token) {
+        // Acrecentar o token no Authorization
         config.headers.Authorization = `Bearer ${token}`;
         //console.log(`Bearer ${token}`);
       }
     }
+    // Retorna as configuraçãoes
     return config;
   },
   (error) => {
+    // Retornar erro
     return Promise.reject(error);
   },
 );

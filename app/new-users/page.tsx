@@ -3,10 +3,7 @@
 "use client";
 
 // Importa hooks do React para usar o estado
-import { useState } from "react";
-
-// Importa hooks usado para manipular a navegação do usuário
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 // Importar o adptador para conectar react-hook-form com bibliotecas de validação como Yup
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,19 +20,37 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
-// Esquema de validação com Yup
+// Definir tipos para a respota da API
+interface User {
+  name: string;
+  email: string;
+  password: string;
+}
+
+// Validar os dados utilizando o yup
 const schema = yup.object().shape({
+  name: yup
+    .string()
+    .required("O campo nome é obrigatório!")
+    .min(3, "O campo nome deve ter no mínimo 3 caracteres!"),
   email: yup
     .string()
     .email("E-mail inválido!")
-    .required("O email é obrigatório!"),
-  password: yup.string().required("A senha é obrigatória!"),
+    .required("O campo e-mail é obrigatório!"),
+  password: yup
+    .string()
+    .required("O campo senha é obrigatório!")
+    .min(6, "O campo senha deve ter no mínimo 6 caracteres!")
+    .max(128, "A senha deve ter no máximo 128 caracteres!")
+    .matches(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula!")
+    .matches(/[0-9]/, "A senha deve conter pelo menos um número!")
+    .matches(
+      /[^A-Za-z0-9]/,
+      "A senha deve conter pelo menos um caractere especial!",
+    ),
 });
 
-export default function LoginPage() {
-  // Instacia o objeto router
-  const router = useRouter();
-
+export default function CreateNewUser() {
   // Estado para controle de carregamento
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -45,7 +60,9 @@ export default function LoginPage() {
   // Estado para controle de sucesso
   const [sucess, setSucess] = useState<string | null>(null);
 
-  // Iniciar o formulário com validações
+  // Estado para controle de sucesso
+  const [loginSucess, setLoginSucess] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
@@ -56,7 +73,9 @@ export default function LoginPage() {
   });
 
   // Função para enviar os dados para a API
-  const onSubmit = async (data: { email: string; password: string }) => {
+  const onSubmit = async (data: User) => {
+    const payload = { ...data, situation: 1 };
+
     // Inicia o carregamento
     setLoading(true);
 
@@ -66,19 +85,21 @@ export default function LoginPage() {
     // Limpa o sucesso anterior
     setSucess(null);
 
+    // Limpa o sucesso anterior
+    setLoginSucess(false);
+
     try {
       // Fazer a requisição à API e enviar os dados
-      const response = await instance.post("/", data);
+      const response = await instance.post("/new-users", payload);
 
       // Exibir mensagem de sucesso
-      //alert(response.data.message || "Login realizado com sucesso.");
-      // console.log(response.data);
+      setSucess(response.data.message || "Usuário cadastrado com sucesso!");
 
-      // Salvar o token no localStorage
-      localStorage.setItem("token", response.data.user.token);
+      // Limpa o campo do formulário
+      reset();
 
-      // Redireciona para o dashboard
-      router.push("/dashboard");
+      // Exibir link de retorno para pagina de login
+      setLoginSucess(true);
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -94,7 +115,7 @@ export default function LoginPage() {
         }
       } else {
         // Criar a mensagem genérica de erro
-        setError("Erro ao realizar login!");
+        setError("Erro ao cadastrar o usuário, Tente novamente.");
       }
     } finally {
       //Termina o carregamento
@@ -104,22 +125,36 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h1>Login</h1>
+      <Link href={`/`}>Página inicial</Link>
+      <br />
+      <br />
+      <br />
+      <h1>Cadastrar Usuário</h1>
       <br />
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="email">E-mail: </label>
+          <label htmlFor="name">Nome do Usuário: </label>
           <input
             type="text"
+            id="name"
+            placeholder="Nome do Usuário"
+            {...register("name")}
+            className="border"
+          />
+          {/* Exibe o erro de validação do campo */}
+          {errors.name && (
+            <p style={{ color: "#F00" }}>{errors.name.message}</p>
+          )}
+          <br />
+          <br />
+          <label htmlFor="email">Email: </label>
+          <input
+            type="email"
             id="email"
-            placeholder="email@example.com"
+            placeholder="example@example.com"
             {...register("email")}
             className="border"
           />
@@ -127,13 +162,13 @@ export default function LoginPage() {
           {errors.email && (
             <p style={{ color: "#F00" }}>{errors.email.message}</p>
           )}
-        </div>
-        <div>
+          <br />
+          <br />
           <label htmlFor="password">Senha: </label>
           <input
             type="password"
             id="password"
-            placeholder="Digite sua senha..."
+            placeholder="Senha forte aqui..."
             {...register("password")}
             className="border"
           />
@@ -141,11 +176,18 @@ export default function LoginPage() {
           {errors.password && (
             <p style={{ color: "#F00" }}>{errors.password.message}</p>
           )}
+          <br />
+          <br />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? "Logando..." : "Login"} {"  "}
-          <Link href="/new-users">Sign Up</Link>
+          {loading ? "Enviando..." : "Cadastrar"}{" "}
         </button>
+        {/* Exibe mensagem de erro*/}
+        {error && <p style={{ color: "#F00" }}>{error}</p>}
+        {/* Exibe mensagem de sucesso */}
+        {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
+        {/* Exibe o link de voltar para página de login */}
+        {loginSucess && <Link href="/login">Página de Login</Link>}
       </form>
     </div>
   );
