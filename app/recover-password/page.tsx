@@ -3,7 +3,7 @@
 "use client";
 
 // Importa hooks do React para usar o estado
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Importa hooks usado para manipular a navegação do usuário
 import { useRouter } from "next/navigation";
@@ -29,10 +29,9 @@ const schema = yup.object().shape({
     .string()
     .email("E-mail inválido!")
     .required("O email é obrigatório!"),
-  password: yup.string().required("A senha é obrigatória!"),
 });
 
-export default function LoginPage() {
+export default function RecoverPassword() {
   // Instacia o objeto router
   const router = useRouter();
 
@@ -56,7 +55,14 @@ export default function LoginPage() {
   });
 
   // Função para enviar os dados para a API
-  const onSubmit = async (data: { email: string; password: string }) => {
+  const onSubmit = async (data: {
+    email: string;
+    urlRecoverPassword?: string;
+  }) => {
+    // Atribuir a URL da aplicação
+    data.urlRecoverPassword =
+      "http://localhost:3000/recover-password/update-password";
+
     // Inicia o carregamento
     setLoading(true);
 
@@ -68,17 +74,20 @@ export default function LoginPage() {
 
     try {
       // Fazer a requisição à API e enviar os dados
-      const response = await instance.post("/", data);
+      const response = await instance.post("/recover-password", data);
 
-      // Exibir mensagem de sucesso
-      //alert(response.data.message || "Login realizado com sucesso.");
-      // console.log(response.data);
+      // Limpa o campo do formulário
+      reset();
 
-      // Salvar o token no localStorage
-      localStorage.setItem("token", response.data.user.token);
+      // Salvar a mensagem no sessionStorage antes de redirecionar
+      sessionStorage.setItem(
+        "sucessMessage",
+        response.data.message ||
+          "E-mail enviado! Verifique sua caixa de entrada!",
+      );
 
-      // Redireciona para o dashboard
-      router.push("/dashboard");
+      // Redireciona para página de login
+      router.push("/login");
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -90,11 +99,12 @@ export default function LoginPage() {
         if (Array.isArray(error.response.data.message)) {
           setError(error.response.data.message.join(" - "));
         } else {
+          // Exibe as mensagens de erro se for uma única mensagem
           setError(error.response.data.message);
         }
       } else {
         // Criar a mensagem genérica de erro
-        setError("Erro ao realizar login!");
+        setError("Erro ao recuperar a senha!");
       }
     } finally {
       //Termina o carregamento
@@ -102,32 +112,9 @@ export default function LoginPage() {
     }
   };
 
-  useEffect(() => {
-    // Recuperar a mensagem de sucesso salva no sessionStorage
-    const sucessMessage = sessionStorage.getItem("sucessMessage");
-    // Verificar se existe a mensagem
-    if (sucessMessage) {
-      // Atribuir a mensagem
-      setSucess(sucessMessage);
-      // Remover para evitar duplicação
-      sessionStorage.removeItem("sucessMessage");
-    }
-
-    // Recuperar a mensagem de error salva no sessionStorage
-    const errorMessage = sessionStorage.getItem("errorMessage");
-
-    // Verificar se existe a mensagem
-    if (errorMessage) {
-      // Atribuir a mensagem
-      setError(errorMessage);
-      // Remover para evitar duplicação
-      sessionStorage.removeItem("errorMessage");
-    }
-  }, []);
-
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Recuperar Senha</h1>
       <br />
       {/* Exibir o carregando */}
       {loading && <p>Carregando...</p>}
@@ -151,27 +138,11 @@ export default function LoginPage() {
             <p style={{ color: "#F00" }}>{errors.email.message}</p>
           )}
         </div>
-        <div>
-          <label htmlFor="password">Senha: </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Digite sua senha..."
-            {...register("password")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.password && (
-            <p style={{ color: "#F00" }}>{errors.password.message}</p>
-          )}
-        </div>
         <button type="submit" disabled={loading}>
-          {loading ? "Logando..." : "Login"}
+          {loading ? "Enviando..." : "Recuperar"} {"  "}
         </button>
       </form>
-      <Link href="/new-users">Sign Up</Link>
-      <br />
-      <Link href="/recover-password">Recuperar Senha</Link>
+      <Link href="/login">Login</Link>
     </div>
   );
 }
