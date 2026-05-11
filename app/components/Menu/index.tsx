@@ -31,6 +31,9 @@ const Menu = () => {
           <a href="/users/list">Usuários</a>
         </li>
         <li>
+          <a href="/products/list">Produtos</a>
+        </li>
+        <li>
           <a href="#" onClick={handleLogout}>
             Sair
           </a>
