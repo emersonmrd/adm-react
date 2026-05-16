@@ -53,7 +53,7 @@ const DeleteButton = ({
       const response = await instance.delete(`/${route}/${id}`);
 
       // Exibir mensagem de sucesso
-      setSucess(response.data.menssage || "Registro apagado com sucesso!");
+      setSucess(response.data.message || "Registro apagado com sucesso!");
 
       // Chama a função de sucesso, se estiver definida
       if (onSucess) {

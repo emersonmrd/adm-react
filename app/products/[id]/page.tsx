@@ -49,7 +49,7 @@ interface Product {
   updatedAt: string;
 }
 
-export default function UserDetails() {
+export default function ProductDetails() {
   // Usado o useParams para acessar o parâmetro 'id' da URL
   const { id } = useParams();
 
