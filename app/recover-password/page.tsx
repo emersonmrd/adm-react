@@ -113,36 +113,47 @@ export default function RecoverPassword() {
   };
 
   return (
-    <div>
-      <h1>Recuperar Senha</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
+    <div className="bg-login">
+      <div className="card-login">
+        <h1 className="title-login">Recuperar Senha</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="email">E-mail: </label>
-          <input
-            type="text"
-            id="email"
-            placeholder="email@example.com"
-            {...register("email")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.email && (
-            <p style={{ color: "#F00" }}>{errors.email.message}</p>
-          )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Recuperar"} {"  "}
-        </button>
-      </form>
-      <Link href="/login">Login</Link>
+        {/* Exibir o carregando */}
+        {loading && <p>Carregando...</p>}
+
+        {/* Exibe mensagem de erro*/}
+        {error && <p className="alert-danger">{error}</p>}
+        {/* Exibe mensagem de sucesso */}
+        {sucess && <p className="alert-success">{sucess}</p>}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <div className="form-group-login">
+            <label htmlFor="email" className="form-label-login">
+              E-mail:
+            </label>
+            <input
+              type="text"
+              id="email"
+              placeholder="email@example.com"
+              {...register("email")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.email && (
+              <p className="alert-danger">{errors.email.message}</p>
+            )}
+          </div>
+          <div className="btn-group-login">
+            <button type="submit" className="btn-primary-md" disabled={loading}>
+              {loading ? "Enviando..." : "Recuperar"} {"  "}
+            </button>
+          </div>
+          <div className="mt-4 text-center">
+            <Link href="/login" className="link-login">
+              Login
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

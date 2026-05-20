@@ -187,36 +187,46 @@ export default function UpdatePassword() {
   }, []);
 
   return (
-    <div>
-      <h1>Recuperar Senha</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
+    <div className="bg-login">
+      <div className="card-login">
+        <h1 className="title-login">Recuperar Senha</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="password">Senha: </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Senha forte aqui..."
-            {...register("password")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.password && (
-            <p style={{ color: "#F00" }}>{errors.password.message}</p>
-          )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Atualizar"} {"  "}
-        </button>
-      </form>
-      <Link href="/login">Login</Link>
+        {/* Exibir o carregando */}
+        {loading && <p>Carregando...</p>}
+        {/* Exibe mensagem de erro*/}
+        {error && <p className="alert-danger">{error}</p>}
+        {/* Exibe mensagem de sucesso */}
+        {sucess && <p className="alert-success">{sucess}</p>}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <div className="form-group-login">
+            <label htmlFor="password" className="form-label-login">
+              Senha:
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Senha forte aqui..."
+              {...register("password")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.password && (
+              <p className="alert-danger">{errors.password.message}</p>
+            )}
+          </div>
+          <div className="btn-group-login">
+            <button type="submit" className="btn-primary-md" disabled={loading}>
+              {loading ? "Enviando..." : "Atualizar"}
+            </button>
+          </div>
+          <div className="mt-4 text-center">
+            <Link href="/login" className="link-login">
+              Login
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -124,71 +124,95 @@ export default function CreateNewUser() {
   };
 
   return (
-    <div>
-      <Link href={`/`}>Página inicial</Link>
-      <br />
-      <br />
-      <br />
-      <h1>Cadastrar Usuário</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Nome do Usuário: </label>
-          <input
-            type="text"
-            id="name"
-            placeholder="Nome do Usuário"
-            {...register("name")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.name && (
-            <p style={{ color: "#F00" }}>{errors.name.message}</p>
-          )}
-          <br />
-          <br />
-          <label htmlFor="email">Email: </label>
-          <input
-            type="email"
-            id="email"
-            placeholder="example@example.com"
-            {...register("email")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.email && (
-            <p style={{ color: "#F00" }}>{errors.email.message}</p>
-          )}
-          <br />
-          <br />
-          <label htmlFor="password">Senha: </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Senha forte aqui..."
-            {...register("password")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.password && (
-            <p style={{ color: "#F00" }}>{errors.password.message}</p>
-          )}
-          <br />
-          <br />
+    <div className="bg-login">
+      <div className="card-login">
+        <div className="logo-wrapper-login">
+          <a href="/">
+            <img
+              src="/images/logo-login.png"
+              alt="Logo"
+              className="logo-login"
+            />
+          </a>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Cadastrar"}{" "}
-        </button>
+
+        <h1 className="title-login">Cadastra-se !</h1>
+
+        {/* Exibir o carregando */}
+        {loading && <p>Carregando...</p>}
         {/* Exibe mensagem de erro*/}
-        {error && <p style={{ color: "#F00" }}>{error}</p>}
+        {error && <p className="alert-danger">{error}</p>}
         {/* Exibe mensagem de sucesso */}
-        {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-        {/* Exibe o link de voltar para página de login */}
-        {loginSucess && <Link href="/login">Página de Login</Link>}
-      </form>
+        {sucess && <p className="alert-success">{sucess}</p>}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <div className="form-group-login">
+            <label htmlFor="name" className="form-label-login">
+              Nome do Usuário:
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Nome do Usuário"
+              {...register("name")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.name && (
+              <p className="alert-danger">{errors.name.message}</p>
+            )}
+          </div>
+          <div className="form-group-login">
+            <label htmlFor="email" className="form-label-login">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="example@example.com"
+              {...register("email")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.email && (
+              <p className="alert-danger">{errors.email.message}</p>
+            )}
+          </div>
+          <div className="form-group-login">
+            <label htmlFor="password" className="form-label-login">
+              Senha:
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Senha forte aqui..."
+              {...register("password")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.password && (
+              <p className="alert-danger">{errors.password.message}</p>
+            )}
+          </div>
+          <div className="btn-group-login">
+            <button type="submit" disabled={loading} className="btn-primary-md">
+              {loading ? "Enviando..." : "Cadastrar"}
+            </button>
+            {/* Exibe o link de voltar para página de login */}
+            {loginSucess && (
+              <Link href="/login" className="link-login">
+                Página de Login
+              </Link>
+            )}
+          </div>
+
+          <div className="mt-4 text-center">
+            <Link href={`/`} className="link-login">
+              Página inicial
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

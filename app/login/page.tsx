@@ -126,52 +126,77 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Login</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
+    <div className="bg-login">
+      <div className="card-login">
+        <div className="logo-wrapper-login">
+          <a href="/">
+            <img
+              src="/images/logo-login.png"
+              alt="Logo"
+              className="logo-login"
+            />
+          </a>
+        </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="email">E-mail: </label>
-          <input
-            type="text"
-            id="email"
-            placeholder="email@example.com"
-            {...register("email")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.email && (
-            <p style={{ color: "#F00" }}>{errors.email.message}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="password">Senha: </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Digite sua senha..."
-            {...register("password")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.password && (
-            <p style={{ color: "#F00" }}>{errors.password.message}</p>
-          )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Logando..." : "Login"}
-        </button>
-      </form>
-      <Link href="/new-users">Sign Up</Link>
-      <br />
-      <Link href="/recover-password">Recuperar Senha</Link>
+        <h1 className="title-login">Área Restrita</h1>
+
+        {/* Exibir o carregando */}
+        {loading && <p>Carregando...</p>}
+
+        {/* Exibe mensagem de erro*/}
+        {error && <p className="alert-danger">{error}</p>}
+        {/* Exibe mensagem de sucesso */}
+        {sucess && <p className="alert-success">{sucess}</p>}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+          <div className="form-group-login">
+            <label htmlFor="email" className="form-label-login">
+              E-mail:
+            </label>
+            <input
+              type="text"
+              id="email"
+              placeholder="email@example.com"
+              {...register("email")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.email && (
+              <p className="alert-danger">{errors.email.message}</p>
+            )}
+          </div>
+          <div className="form-group-login">
+            <label htmlFor="password" className="form-label-login">
+              Senha:
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Digite sua senha..."
+              {...register("password")}
+              className="form-input-login"
+            />
+            {/* Exibe o erro de validação do campo */}
+            {errors.password && (
+              <p className="alert-danger">{errors.password.message}</p>
+            )}
+          </div>
+
+          <div className="btn-group-login">
+            <Link href="/recover-password" className="link-login">
+              Esqueceu a senha?
+            </Link>
+            <button type="submit" className="btn-primary-md" disabled={loading}>
+              {loading ? "Acessando..." : "Acessar"}
+            </button>
+          </div>
+          <div className="mt-4 text-center">
+            <Link href="/new-users" className="link-login">
+              Criar nova conta!
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
