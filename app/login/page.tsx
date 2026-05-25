@@ -24,7 +24,10 @@ import instance from "@/services/api";
 import Link from "next/link";
 
 // Importa o componente LoadingSpinner
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Esquema de validação com Yup
 const schema = yup.object().shape({
@@ -46,7 +49,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Iniciar o formulário com validações
   const {
@@ -67,7 +70,7 @@ export default function LoginPage() {
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     try {
       // Fazer a requisição à API e enviar os dados
@@ -107,13 +110,13 @@ export default function LoginPage() {
 
   useEffect(() => {
     // Recuperar a mensagem de sucesso salva no sessionStorage
-    const sucessMessage = sessionStorage.getItem("sucessMessage");
+    const successMessage = sessionStorage.getItem("successMessage");
     // Verificar se existe a mensagem
-    if (sucessMessage) {
+    if (successMessage) {
       // Atribuir a mensagem
-      setSucess(sucessMessage);
+      setSuccess(successMessage);
       // Remover para evitar duplicação
-      sessionStorage.removeItem("sucessMessage");
+      sessionStorage.removeItem("successMessage");
     }
 
     // Recuperar a mensagem de error salva no sessionStorage
@@ -147,9 +150,9 @@ export default function LoginPage() {
         {loading && <LoadingSpinner />}
 
         {/* Exibe mensagem de erro*/}
-        {error && <p className="alert-danger">{error}</p>}
+        <AlertMessage type="error" message={error} />
         {/* Exibe mensagem de sucesso */}
-        {sucess && <p className="alert-success">{sucess}</p>}
+        <AlertMessage type="success" message={success} />
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
           <div className="form-group-login">
@@ -165,7 +168,10 @@ export default function LoginPage() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.email && (
-              <p className="alert-danger">{errors.email.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.email.message ?? null}
+              />
             )}
           </div>
           <div className="form-group-login">
@@ -181,7 +187,10 @@ export default function LoginPage() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.password && (
-              <p className="alert-danger">{errors.password.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.password.message ?? null}
+              />
             )}
           </div>
 

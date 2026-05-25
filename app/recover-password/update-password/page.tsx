@@ -26,6 +26,9 @@ import Link from "next/link";
 // Importa o componente de loading
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
+
 // Validar os dados utilizando o yup
 const schema = yup.object().shape({
   password: yup
@@ -55,7 +58,7 @@ export default function UpdatePassword() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Iniciar o formulário com validações
   const {
@@ -85,7 +88,7 @@ export default function UpdatePassword() {
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     try {
       // Fazer a requisição à API e enviar os dados
@@ -96,7 +99,7 @@ export default function UpdatePassword() {
 
       // Salvar a mensagem no sessionStorage antes de redirecionar
       sessionStorage.setItem(
-        "sucessMessage",
+        "successMessage",
         response.data.message || "Senha atualizada com sucesso!",
       );
 
@@ -197,9 +200,9 @@ export default function UpdatePassword() {
         {/* Exibir o carregando */}
         {loading && <LoadingSpinner />}
         {/* Exibe mensagem de erro*/}
-        {error && <p className="alert-danger">{error}</p>}
+        <AlertMessage type="error" message={error} />
         {/* Exibe mensagem de sucesso */}
-        {sucess && <p className="alert-success">{sucess}</p>}
+        <AlertMessage type="success" message={success} />
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
           <div className="form-group-login">
@@ -215,7 +218,10 @@ export default function UpdatePassword() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.password && (
-              <p className="alert-danger">{errors.password.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.password.message ?? null}
+              />
             )}
           </div>
           <div className="btn-group-login">

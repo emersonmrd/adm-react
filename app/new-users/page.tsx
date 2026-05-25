@@ -21,7 +21,10 @@ import instance from "@/services/api";
 import Link from "next/link";
 
 // Importa o componente de loading
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface User {
@@ -61,10 +64,10 @@ export default function CreateNewUser() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [loginSucess, setLoginSucess] = useState<boolean>(false);
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
 
   const {
     register,
@@ -86,23 +89,23 @@ export default function CreateNewUser() {
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     // Limpa o sucesso anterior
-    setLoginSucess(false);
+    setLoginSuccess(false);
 
     try {
       // Fazer a requisição à API e enviar os dados
       const response = await instance.post("/new-users", payload);
 
       // Exibir mensagem de sucesso
-      setSucess(response.data.message || "Usuário cadastrado com sucesso!");
+      setSuccess(response.data.message || "Usuário cadastrado com sucesso!");
 
       // Limpa o campo do formulário
       reset();
 
       // Exibir link de retorno para pagina de login
-      setLoginSucess(true);
+      setLoginSuccess(true);
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -144,9 +147,9 @@ export default function CreateNewUser() {
         {/* Exibir o carregando */}
         {loading && <LoadingSpinner />}
         {/* Exibe mensagem de erro*/}
-        {error && <p className="alert-danger">{error}</p>}
+        <AlertMessage type="error" message={error} />
         {/* Exibe mensagem de sucesso */}
-        {sucess && <p className="alert-success">{sucess}</p>}
+        <AlertMessage type="success" message={success} />
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
           <div className="form-group-login">
@@ -162,7 +165,10 @@ export default function CreateNewUser() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.name && (
-              <p className="alert-danger">{errors.name.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.name.message ?? null}
+              />
             )}
           </div>
           <div className="form-group-login">
@@ -178,7 +184,10 @@ export default function CreateNewUser() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.email && (
-              <p className="alert-danger">{errors.email.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.email.message ?? null}
+              />
             )}
           </div>
           <div className="form-group-login">
@@ -194,7 +203,10 @@ export default function CreateNewUser() {
             />
             {/* Exibe o erro de validação do campo */}
             {errors.password && (
-              <p className="alert-danger">{errors.password.message}</p>
+              <AlertMessage
+                type="error"
+                message={errors.password.message ?? null}
+              />
             )}
           </div>
           <div className="btn-group-login">
@@ -202,7 +214,7 @@ export default function CreateNewUser() {
               {loading ? "Enviando..." : "Cadastrar"}
             </button>
             {/* Exibe o link de voltar para página de login */}
-            {loginSucess && (
+            {loginSuccess && (
               <Link href="/login" className="link-login">
                 Página de Login
               </Link>
