@@ -23,6 +23,9 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importa o componente de loading
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
 // Validar os dados utilizando o yup
 const schema = yup.object().shape({
   password: yup
@@ -192,7 +195,7 @@ export default function UpdatePassword() {
         <h1 className="title-login">Recuperar Senha</h1>
 
         {/* Exibir o carregando */}
-        {loading && <p>Carregando...</p>}
+        {loading && <LoadingSpinner />}
         {/* Exibe mensagem de erro*/}
         {error && <p className="alert-danger">{error}</p>}
         {/* Exibe mensagem de sucesso */}

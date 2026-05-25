@@ -23,6 +23,9 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "../components/LoadingSpinner";
+
 // Esquema de validação com Yup
 const schema = yup.object().shape({
   email: yup
@@ -141,7 +144,7 @@ export default function LoginPage() {
         <h1 className="title-login">Área Restrita</h1>
 
         {/* Exibir o carregando */}
-        {loading && <p>Carregando...</p>}
+        {loading && <LoadingSpinner />}
 
         {/* Exibe mensagem de erro*/}
         {error && <p className="alert-danger">{error}</p>}

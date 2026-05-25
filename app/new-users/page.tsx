@@ -20,6 +20,9 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
+// Importa o componente de loading
+import LoadingSpinner from "../components/LoadingSpinner";
+
 // Definir tipos para a respota da API
 interface User {
   name: string;
@@ -139,7 +142,7 @@ export default function CreateNewUser() {
         <h1 className="title-login">Cadastra-se !</h1>
 
         {/* Exibir o carregando */}
-        {loading && <p>Carregando...</p>}
+        {loading && <LoadingSpinner />}
         {/* Exibe mensagem de erro*/}
         {error && <p className="alert-danger">{error}</p>}
         {/* Exibe mensagem de sucesso */}
