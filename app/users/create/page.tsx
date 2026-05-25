@@ -17,9 +17,6 @@ import * as yup from "yup";
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
-// Importa o componente com o Menu
-import Menu from "@/app/components/Menu";
-
 // Importa o componente link do next
 import Link from "next/link";
 
@@ -140,8 +137,6 @@ export default function CreateUser() {
 
   return (
     <ProtectedRoute>
-      <Menu />
-      <br />
       <Link href={`/users/list`}>Listar</Link>
       <br />
       <h1>Cadastrar Usuário</h1>

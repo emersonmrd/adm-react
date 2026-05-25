@@ -53,7 +53,141 @@
 
 /* Fim Login */
 
-/* Inicio Botoões */
+/* Inicio Navbar */
+/* Estilização do fundo */
+@utility bg-dashboard {
+  @apply bg-gray-100 min-h-screen;
+}
+
+/* Navbar */
+@utility navbar {
+  @apply bg-blue-900 border-b border-gray-200 px-4 py-2 sm:px-6 lg:px-8;
+}
+
+/* Botão de menu mobile */
+@utility menu-button {
+  @apply text-gray-50 sm:hidden cursor-pointer;
+}
+
+/* Container da Navbar */
+@utility navbar-container {
+  @apply flex items-center justify-end;
+}
+
+/* Container do usuário */
+@utility user-container {
+  @apply ml-auto flex items-center space-x-4;
+}
+
+/* Dropdown */
+@utility dropdown-button {
+  @apply bg-blue-900 px-3 py-2 text-sm text-gray-50 flex items-center cursor-pointer;
+}
+
+@utility dropdown-content {
+  @apply absolute right-0 z-50 mt-2 rounded-md shadow-lg bg-white w-48;
+}
+
+@utility dropdown-item {
+  @apply block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none;
+}
+
+/* Icone do dropdown */
+@utility dropdown-icon {
+  @apply ml-2 h-4 w-4;
+}
+
+/* Fim Navbar */
+
+/* Inicio Sidebar */
+
+@utility sidebar {
+  @apply fixed inset-y-0 left-0 w-64 bg-white shadow-md transform -translate-x-full transition-transform duration-300 ease-in-out sm:translate-x-0;
+}
+
+@utility sidebar-open {
+  @apply transform translate-x-0;
+}
+
+@utility sidebar-container {
+  @apply bg-blue-950 relative h-full;
+}
+
+@utility sidebar-close-button {
+  @apply absolute top-4 right-4 text-gray-50 sm:hidden cursor-pointer;
+}
+
+@utility sidebar-header {
+  @apply flex items-center border-b-2 border-blue-900 space-x-2 pl-4 py-3;
+}
+
+@utility sidebar-title {
+  @apply text-lg font-bold text-blue-400;
+}
+
+@utility sidebar-nav {
+  @apply mt-4;
+}
+
+@utility sidebar-link {
+  @apply px-4 py-2 text-sm text-gray-50 hover:bg-blue-900 flex items-center space-x-1;
+}
+
+@utility sidebar-link-active {
+  @apply bg-blue-900;
+}
+
+/* Fim Sidebar */
+
+/* Início Conteúdo Principal */
+
+@utility main-content {
+  @apply flex-1 p-4 ml-0 sm:ml-64;
+}
+
+@utility content-wrapper {
+  @apply mx-auto px-1 sm:px-0 lg:px-0 mb-2;
+}
+
+@utility content-header {
+  @apply flex justify-between items-center;
+}
+
+@utility content-title {
+  @apply text-2xl font-semibold text-blue-900;
+}
+
+@utility breadcrumb {
+  @apply text-sm text-gray-500;
+}
+
+@utility breadcrumb-link {
+  @apply text-blue-500 hover:no-underline hover:text-blue-600;
+}
+
+@utility content-box {
+  @apply bg-white shadow-lg sm:rounded-lg text-gray-900 p-4;
+}
+
+@utility content-box-header {
+  @apply flex justify-between items-center border-b-2 border-gray-100 pb-2 mb-3;
+}
+
+@utility content-box-title {
+  @apply text-lg font-semibold text-blue-900;
+}
+
+@utility content-box-btn {
+  @apply flex space-x-1;
+}
+
+@utility content-box-body {
+  @apply bg-gray-50 text-sm p-4;
+}
+
+/* Fim Conteúdo Principal */
+
+/* Inicio Botões */
 /* Botão azul */
 @utility btn-primary {
   @apply bg-blue-500 text-white text-sm px-2 py-1 rounded  hover:bg-blue-600 transition-colors cursor-pointer;

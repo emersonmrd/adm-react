@@ -14,9 +14,6 @@ import { useParams } from "next/navigation";
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
-// Importa o componente com o Menu
-import Menu from "@/app/components/Menu";
-
 // Importa o componente link do next
 import Link from "next/link";
 
@@ -116,9 +113,6 @@ export default function ProductDetails() {
 
   return (
     <ProtectedRoute>
-      <Menu />
-      <br />
-
       <Link href={`/products/list`}>Listar</Link>
       <br />
 
