@@ -17,8 +17,14 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface Situation {
@@ -51,7 +57,7 @@ export default function ProductList() {
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   // Página atual
   const [currentPage, setCurrentPage] = useState<number>(1);
   // última página
@@ -86,21 +92,21 @@ export default function ProductList() {
   };
 
   // Atualizar a lista de registro após apagar o registro
-  const handleSucess = () => {
+  const handleSuccess = () => {
     fetchProducts(currentPage);
   };
 
   // Hook para buscar os dados na primeira renderização
   useEffect(() => {
     // Recuperar a mensagem salva no sessionStorage
-    const message = sessionStorage.getItem("sucessMessage");
+    const message = sessionStorage.getItem("successMessage");
 
     // Verificar se existe a mensagem
     if (message) {
       // Atribuir a mensagem
-      setSucess(message);
+      setSuccess(message);
       // Remover para evitar duplicação
-      sessionStorage.removeItem("sucessMessage");
+      sessionStorage.removeItem("successMessage");
     }
 
     // Busca os dados ao carregar a página
@@ -108,70 +114,94 @@ export default function ProductList() {
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
 
   return (
-    <ProtectedRoute>
-      <br />
-      <Link href={`/products/create`}>Cadastrar</Link>
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Produto</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <span>Produtos</span>
+            </nav>
+          </div>
+        </div>
 
-      <h1>Listar os Produtos</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-      {!loading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Produto</th>
-              <th>Slug</th>
-              <th>Descrição</th>
-              <th>Preço</th>
-              <th>Situação</th>
-              <th>Categoria</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.slug}</td>
-                <td>{product.description}</td>
-                <td>{`R$${product.price}`}</td>
-                <td>{product.situation.name}</td>
-                <td>{product.category.name}</td>
-                <td>
-                  <Link href={`/products/${product.id}`}>Visualizar</Link>
-                  {` - `}
-                  <Link href={`/products/${product.id}/edit`}>Editar</Link>
-                  {` - `}
-                  <DeleteButton
-                    id={String(product.id)}
-                    route="products"
-                    onSucess={handleSucess}
-                    setError={setError}
-                    setSucess={setSucess}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Listar</h3>
+            <div className="content-box-btn">
+              <Link href="/products/create" className="btn-primary-md">
+                +Novo Produto
+              </Link>
+            </div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
 
-      {/* Usar o componente de Paginação */}
-      <br />
-      <div>
-        <Pagination
-          currentPage={currentPage}
-          lastPage={lastPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
-    </ProtectedRoute>
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+
+            {!loading && !error && (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Produto</th>
+                    <th>Slug</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Situação</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr key={product.id}>
+                      <td>{product.id}</td>
+                      <td>{product.name}</td>
+                      <td>{product.slug}</td>
+                      <td>{product.description}</td>
+                      <td>{`R$${product.price}`}</td>
+                      <td>{product.situation.name}</td>
+                      <td>{product.category.name}</td>
+                      <td>
+                        <Link href={`/products/${product.id}`}>Visualizar</Link>
+                        {` - `}
+                        <Link href={`/products/${product.id}/edit`}>
+                          Editar
+                        </Link>
+                        {` - `}
+                        <DeleteButton
+                          id={String(product.id)}
+                          route="products"
+                          onSuccess={handleSuccess}
+                          setError={setError}
+                          setSuccess={setSuccess}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          {/* Usar o componente de Paginação */}
+          <div>
+            <Pagination
+              currentPage={currentPage}
+              lastPage={lastPage}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

@@ -20,8 +20,14 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface Situation {
@@ -48,7 +54,7 @@ export default function SituationDetails() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Função para buscar as situação da API
   const fetchSituationDetails = async (id: string) => {
@@ -78,9 +84,9 @@ export default function SituationDetails() {
   };
 
   // Redirecionar para a página listar após apagar o registro
-  const handleSucess = () => {
+  const handleSuccess = () => {
     //Salvar a mensagem no sessionStorage antes de redirecionar
-    sessionStorage.setItem("sucessMessage", "Registro apagado com sucesso.");
+    sessionStorage.setItem("successMessage", "Registro apagado com sucesso.");
 
     // Redireciona para a página de listar
     router.push("/situations/list");
@@ -97,39 +103,61 @@ export default function SituationDetails() {
   }, [id]); // Recarrega os dados quando o id mudar
 
   return (
-    <ProtectedRoute>
-      <Link href={`/situations/list`}>Listar</Link>
-      <br />
-
-      <Link href={`/situations/${id}/edit`}>Editar</Link>
-
-      {situation && !loading && !error && (
-        <DeleteButton
-          id={String(situation.id)}
-          route="situations"
-          onSucess={handleSucess}
-          setError={setError}
-          setSucess={setSucess}
-        />
-      )}
-
-      <h1>Detalhes da situação</h1>
-
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-      {/* Imprimir os detalhes do registro */}
-      {situation && !loading && !error && (
-        <div>
-          <p>ID: {situation.id}</p>
-          <p>Nome da Situação: {situation.nameSituation}</p>
-          <p>Criado em: {new Date(situation.createdAt).toLocaleString()}</p>
-          <p>Editado:{new Date(situation.updatedAt).toLocaleString()}</p>
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Situação</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <a href="/situations/list" className="breadcrumb-link">
+                Situações
+              </a>
+              <span> / </span>
+              <span>Visualizar</span>
+            </nav>
+          </div>
         </div>
-      )}
-    </ProtectedRoute>
+
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Visualizar</h3>
+            <div className="content-box-btn"></div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
+
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+            {/* Imprimir os detalhes do registro */}
+            {situation && !loading && !error && (
+              <div>
+                <p>ID: {situation.id}</p>
+                <p>Nome da Situação: {situation.nameSituation}</p>
+                <p>
+                  Criado em: {new Date(situation.createdAt).toLocaleString()}
+                </p>
+                <p>Editado:{new Date(situation.updatedAt).toLocaleString()}</p>
+              </div>
+            )}
+            {situation && !loading && !error && (
+              <DeleteButton
+                id={String(situation.id)}
+                route="situations"
+                onSuccess={handleSuccess}
+                setError={setError}
+                setSuccess={setSuccess}
+              />
+            )}
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

@@ -8,9 +8,6 @@ import { useEffect, useState } from "react";
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
-// Importa o componente com o Menu
-import Menu from "@/app/components/Menu";
-
 // Importa o componente com a paginação
 import Pagination from "@/app/components/Pagination";
 
@@ -20,8 +17,14 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface ProductCategory {
@@ -41,7 +44,7 @@ export default function ProductCategoryList() {
   // Estado para controle de erros
   const [error, setError] = useState<string | null>(null);
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   // Página atual
   const [currentPage, setCurrentPage] = useState<number>(1);
   // última página
@@ -78,21 +81,21 @@ export default function ProductCategoryList() {
   };
 
   // Atualizar a lista de registro após apagar o registro
-  const handleSucess = () => {
+  const handleSuccess = () => {
     fetchProductCategories(currentPage);
   };
 
   // Hook para buscar os dados na primeira renderização
   useEffect(() => {
     // Recuperar a mensagem salva no sessionStorage
-    const message = sessionStorage.getItem("sucessMessage");
+    const message = sessionStorage.getItem("successMessage");
 
     // Verificar se existe a mensagem
     if (message) {
       // Atribuir a mensagem
-      setSucess(message);
+      setSuccess(message);
       // Remover para evitar duplicação
-      sessionStorage.removeItem("sucessMessage");
+      sessionStorage.removeItem("successMessage");
     }
 
     // Busca os dados ao carregar a página
@@ -100,63 +103,92 @@ export default function ProductCategoryList() {
   }, [currentPage]); // Recarregar os dados sempre que a página for alterada
 
   return (
-    <ProtectedRoute>
-      <Menu />
-      <br />
-      <Link href={`/product-categories/create`}>Cadastrar</Link>
-      <h1>Listar as Categorias dos Produtos</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-      {!loading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Categoria do Produto</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productCategories.map((productCategory) => (
-              <tr key={productCategory.id}>
-                <td>{productCategory.id}</td>
-                <td>{productCategory.name}</td>
-                <td>
-                  <Link href={`/product-categories/${productCategory.id}`}>
-                    Visualizar
-                  </Link>
-                  {` - `}
-                  <Link href={`/product-categories/${productCategory.id}/edit`}>
-                    Editar
-                  </Link>
-                  {` - `}
-                  <DeleteButton
-                    id={String(productCategory.id)}
-                    route="product-categories"
-                    onSucess={handleSucess}
-                    setError={setError}
-                    setSucess={setSucess}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {/* Usar o componente de Paginação */}
-      <br />
-      <div>
-        <Pagination
-          currentPage={currentPage}
-          lastPage={lastPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
-    </ProtectedRoute>
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Categoria Produto</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <span>Categorias Produtos</span>
+            </nav>
+          </div>
+        </div>
+
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Listar</h3>
+            <div className="content-box-btn">
+              <Link
+                href="/product-categories/create"
+                className="btn-primary-md"
+              >
+                +Nova Categoria Produto
+              </Link>
+            </div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
+
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+            {!loading && !error && (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Categoria do Produto</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {productCategories.map((productCategory) => (
+                    <tr key={productCategory.id}>
+                      <td>{productCategory.id}</td>
+                      <td>{productCategory.name}</td>
+                      <td>
+                        <Link
+                          href={`/product-categories/${productCategory.id}`}
+                        >
+                          Visualizar
+                        </Link>
+                        {` - `}
+                        <Link
+                          href={`/product-categories/${productCategory.id}/edit`}
+                        >
+                          Editar
+                        </Link>
+                        {` - `}
+                        <DeleteButton
+                          id={String(productCategory.id)}
+                          route="product-categories"
+                          onSuccess={handleSuccess}
+                          setError={setError}
+                          setSuccess={setSuccess}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          {/* Usar o componente de Paginação */}
+          <div>
+            <Pagination
+              currentPage={currentPage}
+              lastPage={lastPage}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

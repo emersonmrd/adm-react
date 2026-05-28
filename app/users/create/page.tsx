@@ -20,8 +20,14 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface User {
@@ -71,7 +77,7 @@ export default function CreateUser() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Estado para controle de situations
   const [situations, setSituations] = useState<Situation[]>([]);
@@ -101,14 +107,14 @@ export default function CreateUser() {
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     try {
       // Fazer a requisição à API e enviar os dados
       const response = await instance.post("/users", data);
 
       // Exibir mensagem de sucesso
-      setSucess(response.data.message || "Usuário cadastrado com sucesso!");
+      setSuccess(response.data.message || "Usuário cadastrado com sucesso!");
 
       // Limpa o campo do formulário
       reset();
@@ -136,90 +142,117 @@ export default function CreateUser() {
   };
 
   return (
-    <ProtectedRoute>
-      <Link href={`/users/list`}>Listar</Link>
-      <br />
-      <h1>Cadastrar Usuário</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Nome do Usuário: </label>
-          <input
-            type="text"
-            id="name"
-            placeholder="Nome do Usuário"
-            {...register("name")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.name && (
-            <p style={{ color: "#F00" }}>{errors.name.message}</p>
-          )}
-
-          <br />
-          <br />
-
-          <label htmlFor="email">Email: </label>
-          <input
-            type="email"
-            id="email"
-            placeholder="example@example.com"
-            {...register("email")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.email && (
-            <p style={{ color: "#F00" }}>{errors.email.message}</p>
-          )}
-
-          <br />
-          <br />
-
-          <label htmlFor="password">Senha: </label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Senha forte aqui..."
-            {...register("password")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.password && (
-            <p style={{ color: "#F00" }}>{errors.password.message}</p>
-          )}
-
-          <br />
-          <br />
-
-          <label htmlFor="situation">Situação: </label>
-          <select
-            id="situation"
-            {...register("situation", { valueAsNumber: true })}
-            className="border"
-          >
-            <option value="">Selecione...</option>
-            {situations.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.nameSituation}
-              </option>
-            ))}
-          </select>
-          {/* Exibe o erro de validação do campo */}
-          {errors.situation && (
-            <p style={{ color: "#F00" }}>{errors.situation.message}</p>
-          )}
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Usuário</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <a href="/users/list" className="breadcrumb-link">
+                Usuários
+              </a>
+              <span> / </span>
+              <span>Criar</span>
+            </nav>
+          </div>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Cadastrar"}{" "}
-        </button>
-      </form>
-    </ProtectedRoute>
+
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Criar</h3>
+            <div className="content-box-btn"></div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
+
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <label htmlFor="name">Nome do Usuário: </label>
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Nome do Usuário"
+                  {...register("name")}
+                  className="border"
+                />
+                {/* Exibe o erro de validação do campo */}
+                {errors.name && (
+                  <AlertMessage
+                    type="error"
+                    message={errors.name.message ?? null}
+                  />
+                )}
+
+                <label htmlFor="email">Email: </label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="example@example.com"
+                  {...register("email")}
+                  className="border"
+                />
+                {/* Exibe o erro de validação do campo */}
+                {errors.email && (
+                  <AlertMessage
+                    type="error"
+                    message={errors.email.message ?? null}
+                  />
+                )}
+
+                <label htmlFor="password">Senha: </label>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Senha forte aqui..."
+                  {...register("password")}
+                  className="border"
+                />
+                {/* Exibe o erro de validação do campo */}
+                {errors.password && (
+                  <AlertMessage
+                    type="error"
+                    message={errors.password.message ?? null}
+                  />
+                )}
+
+                <label htmlFor="situation">Situação: </label>
+                <select
+                  id="situation"
+                  {...register("situation", { valueAsNumber: true })}
+                  className="border"
+                >
+                  <option value="">Selecione...</option>
+                  {situations.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.nameSituation}
+                    </option>
+                  ))}
+                </select>
+                {/* Exibe o erro de validação do campo */}
+                {errors.situation && (
+                  <AlertMessage
+                    type="error"
+                    message={errors.situation.message ?? null}
+                  />
+                )}
+              </div>
+              <button type="submit" disabled={loading}>
+                {loading ? "Enviando..." : "Cadastrar"}{" "}
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

@@ -23,8 +23,14 @@ import instance from "@/services/api";
 // Importa o componente link do next
 import Link from "next/link";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Esquema de validação com Yup
 const schema = yup.object().shape({
@@ -45,7 +51,7 @@ export default function EditSituation() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Função para recuperar os dados da situação a ser editada
   const fetchSituationDetails = async () => {
@@ -100,14 +106,14 @@ export default function EditSituation() {
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     try {
       // Fazer a requisição à API e enviar os dados
       const response = await instance.put(`/situations/${id}`, data);
 
       // Exibir mensagem de sucesso
-      setSucess(response.data.message || "Situação editada com sucesso!");
+      setSuccess(response.data.message || "Situação editada com sucesso!");
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
       if (
@@ -139,39 +145,64 @@ export default function EditSituation() {
     }
   }, [id]); // Recarrega os dados quando o id mudar
   return (
-    <ProtectedRoute>
-      <Link href={`/situations/list`}>Listar</Link>
-      <br />
-      <Link href={`/situations/${id}`}>Visualizar</Link>
-
-      <h1>Editar Situação</h1>
-      <br />
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="nameSituation">Nome da Situação: </label>
-          <input
-            type="text"
-            id="nameSituation"
-            placeholder="Nome da situação"
-            {...register("nameSituation")}
-            className="border"
-          />
-          {/* Exibe o erro de validação do campo */}
-          {errors.nameSituation && (
-            <p style={{ color: "#f00" }}>{errors.nameSituation.message}</p>
-          )}
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Situação</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <a href="/situations/list" className="breadcrumb-link">
+                Situações
+              </a>
+              <span> / </span>
+              <span>Editar</span>
+            </nav>
+          </div>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Salvar"}{" "}
-        </button>
-      </form>
-    </ProtectedRoute>
+
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Editar</h3>
+            <div className="content-box-btn"></div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
+
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <label htmlFor="nameSituation">Nome da Situação: </label>
+                <input
+                  type="text"
+                  id="nameSituation"
+                  placeholder="Nome da situação"
+                  {...register("nameSituation")}
+                  className="border"
+                />
+                {/* Exibe o erro de validação do campo */}
+                {errors.nameSituation && (
+                  <AlertMessage
+                    type="error"
+                    message={errors.nameSituation.message ?? null}
+                  />
+                )}
+              </div>
+              <button type="submit" disabled={loading}>
+                {loading ? "Enviando..." : "Salvar"}{" "}
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

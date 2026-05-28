@@ -20,8 +20,14 @@ import Link from "next/link";
 // Importa o componente para apagar registro
 import DeleteButton from "@/app/components/DeleteButton";
 
-// Importar componente de proteção de rotas
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+// Importa o componente de layout
+import Layout from "@/app/components/Layout";
+
+// Importa o componente LoadingSpinner
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+// Importa o componente de alerta
+import AlertMessage from "@/app/components/AlertMessage";
 
 // Definir tipos para a respota da API
 interface ProductCategory {
@@ -49,7 +55,7 @@ export default function ProductCategoryDetails() {
   const [error, setError] = useState<string | null>(null);
 
   // Estado para controle de sucesso
-  const [sucess, setSucess] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Função para buscar a situação da API
   const fetchProductCategoryDetails = async (id: string) => {
@@ -79,9 +85,9 @@ export default function ProductCategoryDetails() {
   };
 
   // Redirecionar para a página listar após apagar o registro
-  const handleSucess = () => {
+  const handleSuccess = () => {
     //Salvar a mensagem no sessionStorage antes de redirecionar
-    sessionStorage.setItem("sucessMessage", "Registro apagado com sucesso.");
+    sessionStorage.setItem("successMessage", "Registro apagado com sucesso.");
 
     // Redireciona para a página de listar
     router.push("/product-categories/list");
@@ -98,41 +104,64 @@ export default function ProductCategoryDetails() {
   }, [id]); // Recarrega os dados quando o id mudar
 
   return (
-    <ProtectedRoute>
-      <Link href={`/product-categories/list`}>Listar</Link>
-      <br />
-
-      <Link href={`/product-categories/${id}/edit`}>Editar</Link>
-
-      {productCategory && !loading && !error && (
-        <DeleteButton
-          id={String(productCategory.id)}
-          route="product-categories"
-          onSucess={handleSucess}
-          setError={setError}
-          setSucess={setSucess}
-        />
-      )}
-
-      <h1>Detalhes da Categoria do Produto</h1>
-
-      {/* Exibir o carregando */}
-      {loading && <p>Carregando...</p>}
-      {/* Exibe mensagem de erro*/}
-      {error && <p style={{ color: "#F00" }}>{error}</p>}
-      {/* Exibe mensagem de sucesso */}
-      {sucess && <p style={{ color: "#086" }}>{sucess}</p>}
-      {/* Imprimir os detalhes do registro */}
-      {productCategory && !loading && !error && (
-        <div>
-          <p>ID: {productCategory.id}</p>
-          <p>Categoria do Produto: {productCategory.name}</p>
-          <p>
-            Criado em: {new Date(productCategory.createdAt).toLocaleString()}
-          </p>
-          <p>Editado:{new Date(productCategory.updatedAt).toLocaleString()}</p>
+    <Layout>
+      <main className="main-content">
+        <div className="content-wrapper">
+          <div className="content-header">
+            <h2 className="content-title">Categoria Produto</h2>
+            <nav className="breadcrumb">
+              <a href="/dashboard" className="breadcrumb-link">
+                Dashboard
+              </a>
+              <span> / </span>
+              <a href="/product-categories/list" className="breadcrumb-link">
+                Categorias Produtos
+              </a>
+              <span> / </span>
+              <span>Visualizar</span>
+            </nav>
+          </div>
         </div>
-      )}
-    </ProtectedRoute>
+
+        <div className="content-box">
+          <div className="content-box-header">
+            <h3 className="content-box-title">Visualizar</h3>
+            <div className="content-box-btn"></div>
+          </div>
+          <div className="content-box-body">
+            {/* Exibir o carregando */}
+            {loading && <LoadingSpinner />}
+
+            {/* Exibe mensagem de erro*/}
+            <AlertMessage type="error" message={error} />
+            {/* Exibe mensagem de sucesso */}
+            <AlertMessage type="success" message={success} />
+            {/* Imprimir os detalhes do registro */}
+            {productCategory && !loading && !error && (
+              <div>
+                <p>ID: {productCategory.id}</p>
+                <p>Categoria do Produto: {productCategory.name}</p>
+                <p>
+                  Criado em:{" "}
+                  {new Date(productCategory.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  Editado:{new Date(productCategory.updatedAt).toLocaleString()}
+                </p>
+              </div>
+            )}
+            {productCategory && !loading && !error && (
+              <DeleteButton
+                id={String(productCategory.id)}
+                route="product-categories"
+                onSuccess={handleSuccess}
+                setError={setError}
+                setSuccess={setSuccess}
+              />
+            )}
+          </div>
+        </div>
+      </main>
+    </Layout>
   );
 }

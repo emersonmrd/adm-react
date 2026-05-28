@@ -11,26 +11,20 @@ import { useParams } from "next/navigation";
 // Importa a instância do axios configurada para fazer as requisições para a API
 import instance from "@/services/api";
 
-// Importa o componente com o Menu
-import Menu from "@/app/components/Menu";
-
-// Importa o componente link do next
-import Link from "next/link";
-
 interface DeleteButtonProps {
   id: string; // ID da situação a ser excluída
   route: string; // Rota para requisição
-  onSucess?: () => void; // Função de callback após sucesso
+  onSuccess?: () => void; // Função de callback após sucesso
   setError: (message: string | null) => void; // Função de callback para retornar mensagem de erro
-  setSucess: (message: string | null) => void; // Função de callback para retornar mensagem de sucesso
+  setSuccess: (message: string | null) => void; // Função de callback para retornar mensagem de sucesso
 }
 
 const DeleteButton = ({
   id,
   route,
-  onSucess,
+  onSuccess,
   setError,
-  setSucess,
+  setSuccess,
 }: DeleteButtonProps) => {
   // Estado para controle de carregamento
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,18 +40,18 @@ const DeleteButton = ({
     setError(null);
 
     // Limpa o sucesso anterior
-    setSucess(null);
+    setSuccess(null);
 
     try {
       // Fazer a requisição à API
       const response = await instance.delete(`/${route}/${id}`);
 
       // Exibir mensagem de sucesso
-      setSucess(response.data.message || "Registro apagado com sucesso!");
+      setSuccess(response.data.message || "Registro apagado com sucesso!");
 
       // Chama a função de sucesso, se estiver definida
-      if (onSucess) {
-        onSucess();
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error: any) {
       // Verifica se o erro contém mensagens de validação
