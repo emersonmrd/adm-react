@@ -30,8 +30,15 @@ const DeleteButton = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    // Evita múltiplos cliques
-    if (loading) return;
+    // Exibir alerta de confirmação
+    const confirmDelete = window.confirm(
+      "Tem certeza que deseja excluir este registro?",
+    );
+    if (!confirmDelete) return;
+
+    if (loading)
+      // Evita múltiplos cliques
+      return;
 
     // Inicia o carregamento
     setLoading(true);
