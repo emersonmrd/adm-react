@@ -2,10 +2,42 @@
 // Essa diretiva é específica para Next.js 13+ quando se utiliza a renderização no lado do cliente.
 "use client";
 
+// Importa hooks do React para usar o estado "useState", os efeitos colaterais "useEffect" e useRef para criar uma referência ao elemento.
+import { useEffect, useRef, useState } from "react";
+
 // Importa hooks usado para manipular a navegação do usuário
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  // Estado para controlar se o dropdown está aberto ou fechado. Começa com "false" (fechado)
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Criar uma referência para armazenar o elemento do dropdown
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // useEffect é executado quando o componente é montado e desmontado
+  useEffect(() => {
+    // Função para detectar cliques fora do dropdown
+    function handleClickOutside(event: MouseEvent) {
+      // Verifica se o dropdownRef tem um valor e se o clique Não foi dentro do dropdown
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        // Fecha o dropdown se o clique foi fora dele
+        setDropdownOpen(false);
+      }
+    }
+
+    // Adiciona um ouvinte de evento para detectar cliques no documento inteiro
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Fução de limpeza: remove o evento ao desmontar o componente
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []); // O array vazio indica que o  efeito só roda na montagem e desmontagem do componente
+
   // Insatancia o objeto router
   const router = useRouter();
 
@@ -35,8 +67,12 @@ const Navbar = () => {
           </svg>
         </button>
         <div className="user-container">
-          <div className="relative">
-            <button id="userDropdownButton" className="dropdown-button">
+          <div ref={dropdownRef}>
+            <button
+              id="userDropdownButton"
+              className="dropdown-button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
               Usuário
               <svg
                 className="dropdown-icon"
@@ -51,14 +87,16 @@ const Navbar = () => {
                 />
               </svg>
             </button>
-            <div id="dropdownContent" className="dropdown-content hidden">
-              <a href="#" className="dropdown-item">
-                Perfil
-              </a>
-              <a href="#" className="dropdown-item" onClick={handleLogout}>
-                Sair
-              </a>
-            </div>
+            {dropdownOpen && (
+              <div id="dropdownContent" className="dropdown-content">
+                <a href="#" className="dropdown-item">
+                  Perfil
+                </a>
+                <a href="#" className="dropdown-item" onClick={handleLogout}>
+                  Sair
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>
