@@ -124,54 +124,105 @@ export default function ProductCategoryList() {
             <div className="content-box-btn">
               <Link
                 href="/product-categories/create"
-                className="btn-primary-md"
+                className="btn-success aling-icon-btn"
               >
-                +Nova Categoria Produto
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+
+                <span>Cadastrar</span>
               </Link>
             </div>
           </div>
-          <div className="content-box-body">
-            {/* Exibir o carregando */}
-            {loading && <LoadingSpinner />}
+          {/* Exibir o carregando */}
+          {loading && <LoadingSpinner />}
 
-            {/* Exibe mensagem de erro*/}
-            <AlertMessage type="error" message={error} />
-            {/* Exibe mensagem de sucesso */}
-            <AlertMessage type="success" message={success} />
+          {/* Exibe mensagem de erro*/}
+          <AlertMessage type="error" message={error} />
+          {/* Exibe mensagem de sucesso */}
+          <AlertMessage type="success" message={success} />
+          <div className="table-container">
             {!loading && !error && (
-              <table>
+              <table className="table">
                 <thead>
-                  <tr>
-                    <th>Id</th>
-                    <th>Categoria do Produto</th>
-                    <th>Ações</th>
+                  <tr className="table-row-header">
+                    <th className="table-header">ID</th>
+                    <th className="table-header">Categoria do Produto</th>
+                    <th className="table-header-center">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {productCategories.map((productCategory) => (
-                    <tr key={productCategory.id}>
-                      <td>{productCategory.id}</td>
-                      <td>{productCategory.name}</td>
-                      <td>
+                    <tr className="table-row-body" key={productCategory.id}>
+                      <td className="table-body">{productCategory.id}</td>
+                      <td className="table-body">{productCategory.name}</td>
+                      <td className="table-body-actions">
                         <Link
+                          className="btn-primary aling-icon-btn"
                           href={`/product-categories/${productCategory.id}`}
                         >
-                          Visualizar
+                          <svg
+                            className="size-5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                          </svg>
+                          <span>Visualizar</span>
                         </Link>
-                        {` - `}
                         <Link
+                          className="btn-warning table-md-hidden "
                           href={`/product-categories/${productCategory.id}/edit`}
                         >
-                          Editar
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-5"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                            />
+                          </svg>
+
+                          <span>Editar</span>
                         </Link>
-                        {` - `}
-                        <DeleteButton
-                          id={String(productCategory.id)}
-                          route="product-categories"
-                          onSuccess={handleSuccess}
-                          setError={setError}
-                          setSuccess={setSuccess}
-                        />
+                        <span className="table-md-hidden">
+                          <DeleteButton
+                            id={String(productCategory.id)}
+                            route="product-categories"
+                            onSuccess={handleSuccess}
+                            setError={setError}
+                            setSuccess={setSuccess}
+                          />
+                        </span>
                       </td>
                     </tr>
                   ))}

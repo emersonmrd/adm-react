@@ -187,6 +187,88 @@
 
 /* Fim Conteúdo Principal */
 
+/* Inicio Teabela Listar Registros */
+
+@utility table-container {
+  @apply overflow-hidden bg-white shadow-sm;
+}
+
+@utility table {
+  @apply min-w-full divide-y divide-gray-200 border-separate border-spacing-0;
+}
+@utility table-row-header {
+  @apply bg-gray-50;
+}
+
+@utility table-header {
+  @apply px-6 py-3 text-left text-sm font-medium text-gray-500 tracking-wider border-b border-gray-200;
+}
+
+@utility table-header-center {
+  @apply px-6 py-3 text-center text-sm font-medium text-gray-500 tracking-wider border-b border-gray-200;
+}
+
+@utility table-body {
+  @apply px-6 py-2 text-sm text-gray-950 border-b border-gray-200;
+}
+
+@utility table-row-body {
+  @apply hover:bg-gray-50;
+}
+
+@utility table-body-actions {
+  @apply px-6 py-2 text-sm text-gray-950 border-b border-gray-200 text-center space-x-1 flex justify-center items-center;
+}
+
+@utility table-body-actions-a {
+  @apply px-6 py-2 text-sm text-gray-950 border-b border-gray-200;
+}
+
+@utility table-md-hidden {
+  @apply hidden md:flex items-center space-x-1;
+}
+
+/* Fim Teabela Listar Registros */
+
+/* Inicio Formulário */
+
+/* Label dos inputs */
+@utility form-label {
+  @apply block text-sm font-semibold;
+}
+
+/* Input Padrão */
+
+@utility form-input {
+  @apply border p-2 w-full mt-1 rounded-md border-blue-100 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:outline-none;
+}
+
+/* Select Padrão */
+@utility form-select {
+  @apply border p-2 w-full mt-1 rounded-md border-blue-100 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:outline-none bg-white;
+}
+
+/* Option Padrão */
+@utility form-option {
+  @apply text-gray-900 bg-white;
+}
+
+/* Fim Formulário */
+
+/* Inicio Detalhes Registro */
+
+/* Caixa para apresentar os detalhes do registro */
+@utility detail-box {
+  @apply text-gray-700;
+}
+
+/* Detalhes do registro */
+@utility detail-content {
+  @apply font-bold text-gray-500;
+}
+
+/* Fim Detalhes Registro */
+
 /* Inicio Botões */
 /* Botão azul */
 @utility btn-primary {
@@ -195,7 +277,7 @@
 
 /* Botão azul medio */
 @utility btn-primary-md {
-  @apply bg-blue-500 text-white text-sm px-2 py-2 rounded  hover:bg-blue-600 transition-colors cursor-pointer;
+  @apply bg-blue-500 text-white text-base px-2 py-2 rounded  hover:bg-blue-600 transition-colors cursor-pointer;
 }
 
 /* Botão azul claro */
@@ -204,7 +286,7 @@
 }
 
 /* Botão verde */
-@utility btn-sucess {
+@utility btn-success {
   @apply bg-green-500 text-white  text-sm px-2 py-1 rounded  hover:bg-green-600 transition-colors cursor-pointer;
 }
 

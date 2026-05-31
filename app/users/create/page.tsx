@@ -156,101 +156,130 @@ export default function CreateUser() {
                 Usuários
               </a>
               <span> / </span>
-              <span>Criar</span>
+              <span>Cadastrar</span>
             </nav>
           </div>
         </div>
 
         <div className="content-box">
           <div className="content-box-header">
-            <h3 className="content-box-title">Criar</h3>
-            <div className="content-box-btn"></div>
-          </div>
-          <div className="content-box-body">
-            {/* Exibir o carregando */}
-            {loading && <LoadingSpinner />}
-
-            {/* Exibe mensagem de erro*/}
-            <AlertMessage type="error" message={error} />
-            {/* Exibe mensagem de sucesso */}
-            <AlertMessage type="success" message={success} />
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <label htmlFor="name">Nome do Usuário: </label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Nome do Usuário"
-                  {...register("name")}
-                  className="border"
-                />
-                {/* Exibe o erro de validação do campo */}
-                {errors.name && (
-                  <AlertMessage
-                    type="error"
-                    message={errors.name.message ?? null}
-                  />
-                )}
-
-                <label htmlFor="email">Email: </label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="example@example.com"
-                  {...register("email")}
-                  className="border"
-                />
-                {/* Exibe o erro de validação do campo */}
-                {errors.email && (
-                  <AlertMessage
-                    type="error"
-                    message={errors.email.message ?? null}
-                  />
-                )}
-
-                <label htmlFor="password">Senha: </label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Senha forte aqui..."
-                  {...register("password")}
-                  className="border"
-                />
-                {/* Exibe o erro de validação do campo */}
-                {errors.password && (
-                  <AlertMessage
-                    type="error"
-                    message={errors.password.message ?? null}
-                  />
-                )}
-
-                <label htmlFor="situation">Situação: </label>
-                <select
-                  id="situation"
-                  {...register("situation", { valueAsNumber: true })}
-                  className="border"
+            <h3 className="content-box-title">Cadastrar</h3>
+            <div className="content-box-btn">
+              <Link href="/users/list" className="btn-info aling-icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
                 >
-                  <option value="">Selecione...</option>
-                  {situations.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.nameSituation}
-                    </option>
-                  ))}
-                </select>
-                {/* Exibe o erro de validação do campo */}
-                {errors.situation && (
-                  <AlertMessage
-                    type="error"
-                    message={errors.situation.message ?? null}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.242 5.992h12m-12 6.003H20.24m-12 5.999h12M4.117 7.495v-3.75H2.99m1.125 3.75H2.99m1.125 0H5.24m-1.92 2.577a1.125 1.125 0 1 1 1.591 1.59l-1.83 1.83h2.16M2.99 15.745h1.125a1.125 1.125 0 0 1 0 2.25H3.74m0-.002h.375a1.125 1.125 0 0 1 0 2.25H2.99"
                   />
-                )}
-              </div>
-              <button type="submit" disabled={loading}>
-                {loading ? "Enviando..." : "Cadastrar"}{" "}
-              </button>
-            </form>
+                </svg>
+                <span>Listar</span>
+              </Link>
+            </div>
           </div>
+          {/* Exibir o carregando */}
+          {loading && <LoadingSpinner />}
+
+          {/* Exibe mensagem de erro*/}
+          <AlertMessage type="error" message={error} />
+          {/* Exibe mensagem de sucesso */}
+          <AlertMessage type="success" message={success} />
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4">
+              <label htmlFor="name" className="form-label">
+                Nome:{" "}
+              </label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Nome do Usuário"
+                {...register("name")}
+                className="form-input"
+              />
+              {/* Exibe o erro de validação do campo */}
+              {errors.name && (
+                <AlertMessage
+                  type="error"
+                  message={errors.name.message ?? null}
+                />
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="form-label">
+                Email:{" "}
+              </label>
+              <input
+                type="email"
+                id="email"
+                placeholder="example@example.com"
+                {...register("email")}
+                className="form-input"
+              />
+              {/* Exibe o erro de validação do campo */}
+              {errors.email && (
+                <AlertMessage
+                  type="error"
+                  message={errors.email.message ?? null}
+                />
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="password" className="form-label">
+                Senha:{" "}
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Senha forte aqui..."
+                {...register("password")}
+                className="form-input"
+              />
+              {/* Exibe o erro de validação do campo */}
+              {errors.password && (
+                <AlertMessage
+                  type="error"
+                  message={errors.password.message ?? null}
+                />
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="situation" className="form-label">
+                Situação:{" "}
+              </label>
+              <select
+                id="situation"
+                {...register("situation", { valueAsNumber: true })}
+                className="form-select"
+              >
+                <option value="" className="form-option">
+                  Selecione...
+                </option>
+                {situations.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.nameSituation}
+                  </option>
+                ))}
+              </select>
+              {/* Exibe o erro de validação do campo */}
+              {errors.situation && (
+                <AlertMessage
+                  type="error"
+                  message={errors.situation.message ?? null}
+                />
+              )}
+            </div>
+            <button type="submit" disabled={loading} className="btn-success">
+              {loading ? "Cadastrando..." : "Cadastrar"}{" "}
+            </button>
+          </form>
         </div>
       </main>
     </Layout>

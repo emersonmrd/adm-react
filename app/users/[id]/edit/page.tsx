@@ -211,7 +211,50 @@ export default function EditUser() {
         <div className="content-box">
           <div className="content-box-header">
             <h3 className="content-box-title">Editar</h3>
-            <div className="content-box-btn"></div>
+            <div className="content-box-btn">
+              <Link href="/users/list" className="btn-info aling-icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.242 5.992h12m-12 6.003H20.24m-12 5.999h12M4.117 7.495v-3.75H2.99m1.125 3.75H2.99m1.125 0H5.24m-1.92 2.577a1.125 1.125 0 1 1 1.591 1.59l-1.83 1.83h2.16M2.99 15.745h1.125a1.125 1.125 0 0 1 0 2.25H3.74m0-.002h.375a1.125 1.125 0 0 1 0 2.25H2.99"
+                  />
+                </svg>
+                <span>Listar</span>
+              </Link>
+              <Link
+                className="btn-primary aling-icon-btn"
+                href={`/users/${id}`}
+              >
+                <svg
+                  className="size-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+                <span>Visualizar</span>
+              </Link>
+            </div>
           </div>
           <div className="content-box-body">
             {/* Exibir o carregando */}
@@ -223,14 +266,16 @@ export default function EditUser() {
             <AlertMessage type="success" message={success} />
 
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <label htmlFor="name">Nome do Usuário: </label>
+              <div className="mb-4">
+                <label htmlFor="name" className="form-label">
+                  Nome do Usuário:{" "}
+                </label>
                 <input
                   type="text"
                   id="name"
                   placeholder="Nome do Usuário"
                   {...register("name")}
-                  className="border"
+                  className="form-input"
                 />
                 {/* Exibe o erro de validação do campo */}
                 {errors.name && (
@@ -239,14 +284,17 @@ export default function EditUser() {
                     message={errors.name.message ?? null}
                   />
                 )}
-
-                <label htmlFor="email">Email: </label>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="form-label">
+                  Email:{" "}
+                </label>
                 <input
                   type="email"
                   id="email"
                   placeholder="example@example.com"
                   {...register("email")}
-                  className="border"
+                  className="form-input"
                 />
                 {/* Exibe o erro de validação do campo */}
                 {errors.email && (
@@ -255,14 +303,19 @@ export default function EditUser() {
                     message={errors.email.message ?? null}
                   />
                 )}
-
-                <label htmlFor="situation">Situação: </label>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="situation" className="form-label">
+                  Situação:{" "}
+                </label>
                 <select
                   id="situation"
                   {...register("situation", { valueAsNumber: true })}
-                  className="border"
+                  className="form-select"
                 >
-                  <option value="">Selecione...</option>
+                  <option value="" className="form-option">
+                    Selecione...
+                  </option>
                   {situations.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.nameSituation}
@@ -277,7 +330,7 @@ export default function EditUser() {
                   />
                 )}
               </div>
-              <button type="submit" disabled={loading}>
+              <button type="submit" disabled={loading} className="btn-success">
                 {loading ? "Enviando..." : "Salvar"}{" "}
               </button>
             </form>
