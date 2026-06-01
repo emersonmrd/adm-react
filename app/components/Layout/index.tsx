@@ -11,14 +11,23 @@ import Sidebar from "@/app/components/Sidebar";
 // Importar componente de proteção de rotas
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 
+// Importa hooks do React para usar o estado "useState", os efeitos colaterais "useEffect" e useRef para criar uma referência ao elemento.
+import { useEffect, useRef, useState } from "react";
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  // Estado para controlar a sidebar aberta ou fechada
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <ProtectedRoute>
       <div className="bg-dashboard">
-        <Navbar />
+        <Navbar setIsSidebarOpen={setIsSidebarOpen} />
 
         <div className="flex">
-          <Sidebar />
+          <Sidebar
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
+          />
           {children}
         </div>
       </div>

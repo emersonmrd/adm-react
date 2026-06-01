@@ -5,7 +5,13 @@
 // Importa hooks usado para manipular a navegação do usuário
 import { useRouter } from "next/navigation";
 
-const Sidebar = () => {
+const Sidebar = ({
+  isSidebarOpen,
+  setIsSidebarOpen,
+}: {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isOpen: boolean) => void;
+}) => {
   // Insatancia o objeto router
   const router = useRouter();
 
@@ -17,9 +23,16 @@ const Sidebar = () => {
     router.push("/login");
   };
   return (
-    <aside id="sidebar" className="sidebar">
+    <aside
+      id="sidebar"
+      className={`sidebar sm:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+    >
       <div className="sidebar-container">
-        <button id="closeSidebar" className="sidebar-close-button">
+        <button
+          id="closeSidebar"
+          className="sidebar-close-button"
+          onClick={() => setIsSidebarOpen(false)}
+        >
           <svg
             className="h-6 w-6"
             stroke="currentColor"

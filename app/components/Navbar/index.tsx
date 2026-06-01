@@ -8,7 +8,11 @@ import { useEffect, useRef, useState } from "react";
 // Importa hooks usado para manipular a navegação do usuário
 import { useRouter } from "next/navigation";
 
-const Navbar = () => {
+const Navbar = ({
+  setIsSidebarOpen,
+}: {
+  setIsSidebarOpen: (isOpen: boolean) => void;
+}) => {
   // Estado para controlar se o dropdown está aberto ou fechado. Começa com "false" (fechado)
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -51,7 +55,11 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <button id="toggleSidebar" className="menu-button">
+        <button
+          id="toggleSidebar"
+          className="menu-button"
+          onClick={() => setIsSidebarOpen(true)}
+        >
           <svg
             className="h-6 w-6"
             stroke="currentColor"
