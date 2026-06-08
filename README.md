@@ -45,6 +45,12 @@ Instalar a dependência Yup para validar o formulário. O react-hook-form para g
 npm install @hookform/resolvers yup react-hook-form
 ```
 
+Instalar a biblioteca para gerar gráficos
+
+```
+npm install recharts
+```
+
 Rodar o projeto React.
 
 ```

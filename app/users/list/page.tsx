@@ -36,7 +36,7 @@ interface User {
 }
 
 export default function UserList() {
-  // Estado para armazenar as situações
+  // Estado para armazenar os usuários
   const [user, setUser] = useState<User[]>([]);
   // Estado para controle de carregamento
   const [loading, setLoading] = useState<boolean>(true);
